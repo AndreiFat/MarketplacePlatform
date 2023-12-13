@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Ignore this project files ###
+.DS_Store
+src/main/resources/application.properties

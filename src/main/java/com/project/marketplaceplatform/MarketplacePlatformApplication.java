@@ -1,5 +1,6 @@
 package com.project.marketplaceplatform;
 
+import com.project.marketplaceplatform.model.Product;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

@@ -1,9 +1,17 @@
 package com.project.marketplaceplatform.model;
 
-public class DiscountCoupon {
+import jakarta.persistence.*;
+import lombok.Data;
 
-    private int id;
+@Entity
+@Table(name = "discountCoupons")
+@Data
+public class DiscountCoupon {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String code;
     private int discount;
-    private int categoryId;
+    @ManyToOne()   //optional = true pt ca poate exista o categorie fara discount
+    private Category categoryId;
 }

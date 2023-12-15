@@ -1,12 +1,22 @@
 package com.project.marketplaceplatform.model;
 
-public class Invoice {
+import jakarta.persistence.*;
+import lombok.Data;
 
-    private int id;
-    private int orderId;
+@Entity
+@Table(name = "invoices")
+@Data
+public class Invoice {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @OneToOne   //o singura factura apartine unei singure comenzi
+    private Order orderId;
     private int invoiceNumber;
     private String invoiceSeries;
-    private int userId;
-    private int sellerId;
+    @ManyToOne(optional = false)
+    private User userId;
+    @ManyToOne(optional = false)
+    private User sellerId;
     private int discount;
 }

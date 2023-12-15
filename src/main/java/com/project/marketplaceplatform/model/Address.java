@@ -1,9 +1,18 @@
 package com.project.marketplaceplatform.model;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Table(name = "addresses")
+@Data
 public class Address {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String address;
     private String region;
     private String country;
-    private int userId;
+    @ManyToOne(optional = false)  //relatia dintre entitati e obligatorie (nu poate exista adresa fara un user)
+    private User userId;
 }

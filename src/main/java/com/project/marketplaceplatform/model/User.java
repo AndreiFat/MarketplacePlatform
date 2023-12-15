@@ -1,15 +1,22 @@
 package com.project.marketplaceplatform.model;
 
-import java.sql.Date;
+import jakarta.persistence.*;
+import lombok.Data;
 
+import java.sql.Date;
+@Entity
+@Table(name = "users")
+@Data
 public class User {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String surname;
     private String email;
     private String password;
-    private int roleId;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     private Date dateOfBirth;
     private Number phoneNumber;
-    private int addressId;
 }

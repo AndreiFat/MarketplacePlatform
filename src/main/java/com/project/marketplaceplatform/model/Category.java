@@ -1,6 +1,14 @@
 package com.project.marketplaceplatform.model;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Entity
+@Table(name = "categories")
+@Data
 public class Category {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
 }

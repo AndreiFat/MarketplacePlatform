@@ -27,12 +27,12 @@ public class CategoryService {
         return categoryRepository.findById(categoryId);
     }
 
-    public ResponseEntity<Category> update(Long categoryId, Category category){
+    public ResponseEntity<?> update(Long categoryId, Category category){
         categoryRepository.findById(categoryId).ifPresent(foundCategory ->{
             foundCategory.setName(category.getName());
             categoryRepository.save(foundCategory);
         });
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Category Edited!");
     }
 
     public void deleteById(Long categoryId){

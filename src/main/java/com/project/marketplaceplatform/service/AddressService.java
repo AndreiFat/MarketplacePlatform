@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AddressService {
 
@@ -17,8 +19,8 @@ public class AddressService {
     @Autowired
     UserRepository userRepository;
 
-    public ResponseEntity<?> create(Address address, Long userId){
-        User user = userRepository.findByUserId(userId);
+    public ResponseEntity<?> create(Address address){
+        User user = userRepository.findByUserId(address.getUserId().getId());
         address.setUserId(user);
         if(user != null)
             return ResponseEntity.ok(addressRepository.save(address));
@@ -26,9 +28,9 @@ public class AddressService {
             return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<?> getAddressesByUserId(Long userId){
-        User user = userRepository.findByUserId(userId);
-        if(user != null) {
+    public ResponseEntity<?> getAddressesByUserId(User user){
+        User foundUser = userRepository.findByUserId(user.getId());
+        if(foundUser != null) {
             return ResponseEntity.ok(addressRepository.findAddressByUserId(user));
         }else{
             return ResponseEntity.notFound().build();

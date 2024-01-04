@@ -15,13 +15,13 @@ public class AddressController {
     @Autowired
     AddressService addressService;
 
-    @PostMapping("/{userId}/addAddress")
-    public ResponseEntity<?> createAddress(@RequestBody Address address, @PathVariable Long userId){
-        return addressService.create(address, userId);
+    @PostMapping("/addAddress")
+    public ResponseEntity<?> createAddress(@RequestBody Address address){
+        return addressService.create(address);
     }
 
-    @GetMapping("/{userId}/viewAddresses")
-    public ResponseEntity<?> getAllAddressesOfUser(@PathVariable Long userId){
-        return addressService.getAddressesByUserId(userId);
+    @GetMapping("/viewAddresses")
+    public ResponseEntity<?> getAllAddressesOfUser(@RequestBody User user){
+        return addressService.getAddressesByUserId(user);
     }
  }

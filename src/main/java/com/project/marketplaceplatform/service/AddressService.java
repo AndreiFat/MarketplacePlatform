@@ -1,6 +1,7 @@
 package com.project.marketplaceplatform.service;
 
 import com.project.marketplaceplatform.model.Address;
+import com.project.marketplaceplatform.model.Product;
 import com.project.marketplaceplatform.model.User;
 import com.project.marketplaceplatform.repository.AddressRepository;
 import com.project.marketplaceplatform.repository.UserRepository;
@@ -37,5 +38,17 @@ public class AddressService {
         }
     }
 
-    //todo de facut editarea si stergerea in functie de user
+    public ResponseEntity<Address> update(Long addressId, Address address) {
+        addressRepository.findById(addressId).ifPresent((foundAddress -> {
+            foundAddress.setRegion(address.getRegion());
+            foundAddress.setAddress(address.getAddress());
+            foundAddress.setCountry(address.getCountry());
+            addressRepository.save(foundAddress);
+        }));
+        return ResponseEntity.ok().build();
+    }
+
+    public void deleteById(Long addressId){
+        addressRepository.deleteById(addressId);
+    }
 }

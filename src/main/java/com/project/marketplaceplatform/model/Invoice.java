@@ -15,8 +15,6 @@ public class Invoice {
     private int invoiceNumber;
     private String invoiceSeries;
     @ManyToOne(optional = false)
-    private User userId;
-    @ManyToOne(optional = false)
     private User sellerId;
     private int discount;
 }

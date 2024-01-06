@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Date;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -18,5 +19,5 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     private Date dateOfBirth;
-    private Number phoneNumber;
+    private String phoneNumber;
 }

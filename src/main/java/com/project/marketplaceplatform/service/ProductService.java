@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProductService{
+public class ProductService {
     @Autowired
     ProductRepository productRepository;
 
-    public void create(Product product){
+    public void create(Product product) {
         productRepository.save(product);
     }
 
@@ -22,7 +22,7 @@ public class ProductService{
         return productRepository.findAll();
     }
 
-    public Optional<Product> findById(Long productId){
+    public Optional<Product> findById(Long productId) {
         return productRepository.findById(productId);
     }
 
@@ -34,13 +34,13 @@ public class ProductService{
             foundProduct.setPrice(product.getPrice());
             foundProduct.setRating(product.getRating());
             foundProduct.setStock(product.getStock());
-            foundProduct.setSellerId(product.getSellerId());
+//            foundProduct.setSellerId(product.getSellerId());
             productRepository.save(foundProduct);
         }));
         return ResponseEntity.ok().build();
     }
 
-    public void deleteById(Long productId){
+    public void deleteById(Long productId) {
         productRepository.deleteById(productId);
     }
 }

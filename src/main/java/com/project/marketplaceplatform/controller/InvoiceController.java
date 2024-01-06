@@ -14,17 +14,17 @@ public class InvoiceController {
     InvoiceService invoiceService;
 
     @PostMapping("/invoices/addInvoice")
-    public ResponseEntity<?> createInvoice(@RequestBody Invoice invoice){
+    public ResponseEntity<?> createInvoice(@RequestBody Invoice invoice) {
         return invoiceService.create(invoice);
     }
 
     @GetMapping("/invoices/getAllInvoicesForSeller")
-    public ResponseEntity<?> getAllInvoicesForSeller(@RequestBody User seller){
+    public ResponseEntity<?> getAllInvoicesForSeller(@RequestBody User seller) {
         return invoiceService.getAllInvoicesBySellerId(seller);
     }
 
     @GetMapping("/orders/{orderId}")
-    public ResponseEntity<?> getOneInvoiceByOrder(@PathVariable Long orderId){
+    public ResponseEntity<?> getOneInvoiceByOrder(@PathVariable Long orderId) {
         return invoiceService.getOneInvoiceForOrder(orderId);
     }
 }

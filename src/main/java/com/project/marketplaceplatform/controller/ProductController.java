@@ -11,34 +11,35 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
+@CrossOrigin(origins = "http://localhost:5173/")
 public class ProductController {
 
     @Autowired
     ProductService productService;
 
     @PostMapping("/addProduct")
-    public Product createProduct(@RequestBody Product product){
+    public Product createProduct(@RequestBody Product product) {
         productService.create(product);
         return product;
     }
 
     @GetMapping("/viewProducts")
-    public List<?> getAllProducts(){
+    public List<?> getAllProducts() {
         return productService.getAll();
     }
 
     @GetMapping("/{productId}")
-    public Optional<Product> getProduct(@PathVariable Long productId){
+    public Optional<Product> getProduct(@PathVariable Long productId) {
         return productService.findById(productId);
     }
 
     @PutMapping("/editProduct/{productId}")
-    public ResponseEntity<Product> editProduct(@PathVariable Long productId, @RequestBody Product product){
+    public ResponseEntity<Product> editProduct(@PathVariable Long productId, @RequestBody Product product) {
         return productService.update(productId, product);
     }
 
     @DeleteMapping("/deleteProduct/{productId}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long productId){
+    public ResponseEntity<?> deleteProduct(@PathVariable Long productId) {
         productService.deleteById(productId);
         return ResponseEntity.ok("The product was deleted!");
     }

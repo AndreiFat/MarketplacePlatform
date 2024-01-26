@@ -9,23 +9,24 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/favoriteProducts")
+@CrossOrigin(origins = "http://localhost:5173/")
 public class FavoriteProductsController {
 
     @Autowired
     FavoriteProductsService favoriteProductsService;
 
     @PostMapping("/addFavoriteProduct")
-    public ResponseEntity<?> createFavoriteProduct(@RequestBody FavoriteProduct favoriteProduct){
+    public ResponseEntity<?> createFavoriteProduct(@RequestBody FavoriteProduct favoriteProduct) {
         return favoriteProductsService.create(favoriteProduct);
     }
 
     @GetMapping("/viewFavoriteProducts")
-    public ResponseEntity<?> getAllFavoriteProducts(@RequestBody User user){
+    public ResponseEntity<?> getAllFavoriteProducts(@RequestBody User user) {
         return favoriteProductsService.getFavoriteProductsByUserId(user);
     }
 
     @DeleteMapping("/deleteFavoriteProduct/{favoriteProductId}")
-    public ResponseEntity<?> deleteFavoriteProduct(@PathVariable Long favoriteProductId){
+    public ResponseEntity<?> deleteFavoriteProduct(@PathVariable Long favoriteProductId) {
         favoriteProductsService.deleteById(favoriteProductId);
         return ResponseEntity.ok("The product " + favoriteProductId + " was deleted!");
     }

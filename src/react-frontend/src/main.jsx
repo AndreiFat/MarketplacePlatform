@@ -6,6 +6,7 @@ import AddProductPage from "./routes/Products/AddProductPage.jsx";
 import App from "./App.jsx";
 import EditProductPage from "./routes/Products/EditProductPage.jsx";
 import AddReviewPage from "./routes/Reviews/AddReviewPage.jsx";
+import ViewProductPage from "./routes/Products/ViewProductPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -23,7 +24,11 @@ const router = createBrowserRouter([
     {
         path: "/:productId/addReview",
         element: <AddReviewPage/>,
-    }
+    },
+    {
+        path: "/:productId",
+        element: <ViewProductPage/>,
+    },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

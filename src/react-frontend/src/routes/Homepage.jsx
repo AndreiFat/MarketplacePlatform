@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 
 function Homepage() {
     const [products, setProducts] = useState(null)
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch('http://localhost:8080/products/viewProducts', {
@@ -23,24 +25,21 @@ function Homepage() {
             });
     }, []);
 
-    // function deleteProduct(productId) {
-    //
-    //     // Perform the delete request
-    //     fetch(`http://localhost:8080/products/deleteProduct/${productId}`, {
-    //         method: 'DELETE',
-    //     })
-    //         .then((response) => {
-    //             if (response.status === 200) {
-    //                 // Successful delete, redirect to a different page or handle accordingly
-    //                 history.push('/'); // Redirect to the product list page
-    //             } else {
-    //                 throw new Error('Failed to delete product');
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             console.error('Error deleting product:', error);
-    //         });
-    // }
+    function deleteProduct(productId) {
+        fetch(`http://localhost:8080/products/deleteProduct/${productId}`, {
+            method: 'DELETE',
+        })
+            .then((response) => {
+                if (response.status === 200) {
+                    navigate('/');
+                } else {
+                    console.log("Failed to delete!")
+                }
+            })
+            .catch((error) => {
+                console.error('Error deleting product:', error);
+            });
+    }
 
 
     return (
@@ -50,14 +49,13 @@ function Homepage() {
                 products ? (
                         products.map((product) => (
                             <div key={product.id}>
-                                <span>{product.id}</span>
+                                <Link to={`${product.id}`}><span>{product.id}</span></Link>
                                 <span>{product.name}</span>
                                 <span>{product.price}</span>
                                 <span><Button variant="warning"><Link
                                     to={`/editProducts/${product.id}`}>Edit</Link></Button></span>
-                                <span><Button variant="danger">Delete</Button></span>
-                                <span><Button variant="info"><Link
-                                    to={`/${product.id}/addReview`}>Add review</Link></Button></span>
+                                <span><Button variant="danger"
+                                              onClick={() => deleteProduct(product.id)}>Delete</Button></span>
                             </div>
                         )))
                     : (<></>)}

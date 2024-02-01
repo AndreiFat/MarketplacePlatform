@@ -1,18 +1,21 @@
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import Button from 'react-bootstrap/Button';
-import {faHeart} from "@fortawesome/free-solid-svg-icons";
+import Button from "react-bootstrap/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faHeart} from "@fortawesome/free-solid-svg-icons";
 
-function Homepage() {
+function FavouriteProducts() {
 
     const navigate = useNavigate();
 
+    const user = {
+        id: 1
+    }
     const [products, setProducts] = useState(null)
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:8080/products/viewProducts', {
+                const response = await fetch(`http://localhost:8080/favoriteProducts/viewFavoriteProducts/${user.id}`, {
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -32,35 +35,19 @@ function Homepage() {
             }
         };
         console.log("called twice")
-        fetchData();
+        fetchData()
     }, []);
 
-    function deleteProduct(productId) {
-        fetch(`http://localhost:8080/products/deleteProduct/${productId}`, {
-            method: 'DELETE',
-        })
-            .then((response) => {
-                if (response.status === 200) {
-                    navigate('/');
-                } else {
-                    console.log("Failed to delete!")
-                }
-            })
-            .catch((error) => {
-                console.error('Error deleting product:', error);
-            });
-    }
-
-    function saveAsFavourite(productId) {
+    function saveAsFavourite(product) {
         const favouriteProduct = {
             productId: {
-                id: productId
+                id: product.productId.id
             },
             userId: {
-                id: 1
+                id: user.id
             }
         }
-        console.log(`Saving as favourite ${productId}`)
+        console.log(`Saving as favourite ${product.productId.id}`)
         fetch(`http://localhost:8080/favoriteProducts/toggleProduct`, {
             headers: {
                 "Content-Type": "application/json",
@@ -71,6 +58,7 @@ function Homepage() {
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.status)
+                    window.location.reload()
                 } else {
                     console.log("Failed to save!")
                 }
@@ -81,8 +69,7 @@ function Homepage() {
     }
 
     return (
-        <div className="container justify-content-center">
-
+        <>
             {
                 products ? (
                         products.map((product) => (
@@ -92,17 +79,14 @@ function Homepage() {
                                 <span>{product.price}</span>
                                 <span><Button variant="warning"><Link
                                     to={`/editProducts/${product.id}`}>Edit</Link></Button></span>
-                                <span><Button variant="danger"
-                                              onClick={() => deleteProduct(product.id)}>Delete</Button></span>
                                 <span><Button variant="primary"
-                                              onClick={() => saveAsFavourite(product.id)}><FontAwesomeIcon icon={faHeart}
-                                                                                                           size={"xl"}/></Button></span>
+                                              onClick={() => saveAsFavourite(product)}><FontAwesomeIcon icon={faHeart}
+                                                                                                        size={"xl"}/></Button></span>
                             </div>
                         )))
                     : (<></>)}
-            <Button variant="light"><Link to={'/addingProducts'}>Add a product</Link></Button>
-        </div>
+        </>
     )
 }
 
-export default Homepage
+export default FavouriteProducts

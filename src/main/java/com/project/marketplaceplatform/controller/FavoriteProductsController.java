@@ -1,7 +1,6 @@
 package com.project.marketplaceplatform.controller;
 
 import com.project.marketplaceplatform.model.FavoriteProduct;
-import com.project.marketplaceplatform.model.User;
 import com.project.marketplaceplatform.service.FavoriteProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +14,14 @@ public class FavoriteProductsController {
     @Autowired
     FavoriteProductsService favoriteProductsService;
 
-    @PostMapping("/addFavoriteProduct")
-    public ResponseEntity<?> createFavoriteProduct(@RequestBody FavoriteProduct favoriteProduct) {
-        return favoriteProductsService.create(favoriteProduct);
+    @PostMapping("/toggleProduct")
+    public ResponseEntity<?> toggleFavoriteProduct(@RequestBody FavoriteProduct favoriteProduct) {
+        return favoriteProductsService.toggleFavouriteProduct(favoriteProduct);
     }
 
-    @GetMapping("/viewFavoriteProducts")
-    public ResponseEntity<?> getAllFavoriteProducts(@RequestBody User user) {
-        return favoriteProductsService.getFavoriteProductsByUserId(user);
+    @GetMapping("/viewFavoriteProducts/{userId}")
+    public ResponseEntity<?> getAllFavoriteProducts(@PathVariable Long userId) {
+        return favoriteProductsService.getFavoriteProductsByUserId(userId);
     }
 
     @DeleteMapping("/deleteFavoriteProduct/{favoriteProductId}")

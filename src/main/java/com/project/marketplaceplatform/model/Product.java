@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 public class Product {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String description;
@@ -20,7 +20,10 @@ public class Product {
     private Category categoryId;
     private int stock;
     private double rating;
-//    private int sellerId;
+    //    private int sellerId;
+    @JsonManagedReference(value = "review-product")
+    @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
 
     @OneToMany(mappedBy = "product")
     @JsonManagedReference(value = "product-items")

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -22,31 +21,31 @@ public class ReviewService {
     @Autowired
     ProductRepository productRepository;
 
-    public ResponseEntity<?> create(Review review, Long productId){
+    public ResponseEntity<?> create(Review review, Long productId) {
         Product product = productRepository.findByProductId(productId);
         review.setProductId(product);
-        if(product != null) {
+        if (product != null) {
             return ResponseEntity.ok(reviewRepository.save(review));
-        }else{
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     public ResponseEntity<?> getAllReviewsByProductId(Long productId) {
         Product product = productRepository.findByProductId(productId);
-        if(product != null) {
+        if (product != null) {
             return ResponseEntity.ok(reviewRepository.findReviewByProductId(product));
-        }else{
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    public Optional<Review> findById(Long reviewId){
+    public Optional<Review> findById(Long reviewId) {
         return reviewRepository.findById(reviewId);
     }
 
     public ResponseEntity<Review> update(Long reviewId, Review review, User user) {
-        if(Objects.equals(review.getUserId().getId(), user.getId())) {
+        if (Objects.equals(review.getUserId().getId(), user.getId())) {
             reviewRepository.findById(reviewId).ifPresent((foundReview -> {
                 foundReview.setDescription(review.getDescription());
                 foundReview.setNumberOfStars(review.getNumberOfStars());
@@ -56,7 +55,7 @@ public class ReviewService {
         return ResponseEntity.ok().build();
     }
 
-    public void deleteById(Long reviewId){
+    public void deleteById(Long reviewId) {
         reviewRepository.deleteById(reviewId);
     }
 

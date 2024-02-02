@@ -3,10 +3,12 @@ import {Link, useNavigate} from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import {faHeart} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useLocalState} from "../Utilities/useLocalState.js";
 
 function Homepage() {
 
     const navigate = useNavigate();
+    const [jwt, setJwt] = useLocalState("", "jwt");
 
     const [products, setProducts] = useState(null)
     useEffect(() => {
@@ -15,8 +17,10 @@ function Homepage() {
                 const response = await fetch('http://localhost:8080/products/viewProducts', {
                     headers: {
                         "Content-Type": "application/json",
+                        Authorization: `Bearer ${jwt}`,
                     },
                     method: 'GET',
+
                 });
 
                 if (!response.ok) {

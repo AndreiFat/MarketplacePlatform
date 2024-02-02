@@ -2,9 +2,12 @@ import Form from 'react-bootstrap/Form';
 import {useEffect, useState} from "react";
 import Button from "react-bootstrap/Button";
 import {Link} from "react-router-dom";
+import {useLocalState} from "../../Utilities/useLocalState.js";
 
 
 function AddProductPage() {
+    const [jwt, setJwt] = useLocalState("", "jwt");
+
     const [products, setProducts] = useState(null);
     const [categories, setCategories] = useState(null);
     const [name, setName] = useState(null)
@@ -19,6 +22,7 @@ function AddProductPage() {
         fetch('http://localhost:8080/categories/viewCategories', {
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`,
             },
             method: 'GET'
         })
@@ -57,6 +61,7 @@ function AddProductPage() {
         fetch('http://localhost:8080/products/addProduct', {
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`,
             },
             method: 'POST',
             body: JSON.stringify(product),

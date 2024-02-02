@@ -8,7 +8,7 @@ function AuthenticationLayout() {
         <>
             <Container fluid className={"p-0"}>
                 <Header/>
-                Aici este layoutul pentru autentificare
+                <p className={"text-center"}>Aici este layoutul pentru autentificare</p>
                 <Container>
                     <Outlet/>
                 </Container>

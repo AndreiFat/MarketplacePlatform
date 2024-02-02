@@ -1,37 +1,25 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import {createBrowserRouter, Outlet, RouterProvider,} from "react-router-dom";
+import {createBrowserRouter, RouterProvider,} from "react-router-dom";
 import AddProductPage from "./routes/Products/AddProductPage.jsx";
 import App from "./App.jsx";
 import EditProductPage from "./routes/Products/EditProductPage.jsx";
 import AddReviewPage from "./routes/Reviews/AddReviewPage.jsx";
 import ViewProductPage from "./routes/Products/ViewProductPage.jsx";
-import Header from "./components/Header.jsx";
-import Footer from "./components/Footer.jsx";
-import {Container} from "react-bootstrap";
 import FavouriteProducts from "./routes/Products/FavouriteProducts.jsx";
 import ShoppingCart from "./routes/Products/ShoppingCart.jsx";
+import Login from "./routes/User/Login.jsx";
+import Register from "./routes/User/Register.jsx";
+import GeneralLayout from "./Layouts/GeneralLayout.jsx";
+import AuthenticationLayout from "./Layouts/AuthenticationLayout.jsx";
 
 // eslint-disable-next-line react-refresh/only-export-components
-const Layout = () => {
-    return (
-        <>
-            <Container fluid className={"p-0"}>
-                <Header/>
-                <Container>
-                    <Outlet/>
-                </Container>
-                <Footer/>
-            </Container>
-        </>
-    )
-}
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Layout/>,
+        element: <GeneralLayout/>,
         children: [
             {
                 path: "/",
@@ -62,7 +50,22 @@ const router = createBrowserRouter([
                 element: <ShoppingCart/>
             },
         ]
+    },
+    {
+        path: "/user",
+        element: <AuthenticationLayout/>,
+        children: [
+            {
+                path: "/login",
+                element: <Login/>,
+            },
+            {
+                path: "/login",
+                element: <Register/>,
+            },
+        ]
     }
+
 
 ]);
 

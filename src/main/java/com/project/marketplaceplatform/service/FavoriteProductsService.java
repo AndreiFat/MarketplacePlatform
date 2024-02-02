@@ -21,28 +21,36 @@ public class FavoriteProductsService {
     @Autowired
     ProductRepository productRepository;
 
-    public ResponseEntity<?> create(FavoriteProduct favoriteProduct){
+    public ResponseEntity<?> toggleFavouriteProduct(FavoriteProduct favoriteProduct) {
         User user = userRepository.findByUserId(favoriteProduct.getUserId().getId());
         Product product = productRepository.findByProductId(favoriteProduct.getProductId().getId());
-        favoriteProduct.setUserId(user);
-        favoriteProduct.setProductId(product);
-        if(user != null){
-            return ResponseEntity.ok(favoriteProductsRepository.save(favoriteProduct));
-        }else{
+        if (product != null && user != null) {
+
+            FavoriteProduct foundFavouriteProduct = favoriteProductsRepository.findByUserIdAndProductId(user, product);
+
+            if (foundFavouriteProduct == null) {
+                favoriteProduct.setUserId(user);
+                favoriteProduct.setProductId(product);
+                return ResponseEntity.ok(favoriteProductsRepository.save(favoriteProduct));
+            } else {
+                favoriteProductsRepository.delete(foundFavouriteProduct);
+                return ResponseEntity.ok("Deleted!");
+            }
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    public ResponseEntity<?> getFavoriteProductsByUserId(User user){
-        User foundUser = userRepository.findByUserId(user.getId());
-        if(foundUser != null) {
-            return ResponseEntity.ok(favoriteProductsRepository.findFavoriteProductByUserId(user));
-        }else{
+    public ResponseEntity<?> getFavoriteProductsByUserId(Long userId) {
+        User foundUser = userRepository.findByUserId(userId);
+        if (foundUser != null) {
+            return ResponseEntity.ok(favoriteProductsRepository.findFavoriteProductByUserId(foundUser));
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    public void deleteById(Long favoriteProductId){
+    public void deleteById(Long favoriteProductId) {
         favoriteProductsRepository.deleteById(favoriteProductId);
     }
 }

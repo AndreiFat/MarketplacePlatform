@@ -1,5 +1,6 @@
 package com.project.marketplaceplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,8 +11,11 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne()  //mai multe reviews la un produs
+    @ManyToOne  //mai multe reviews la un produs
+    @JoinColumn(name = "product_id_id")
+    @JsonBackReference(value = "review-product")
     private Product productId;
+
     @ManyToOne(optional = false)
     private User userId;
     private String description;

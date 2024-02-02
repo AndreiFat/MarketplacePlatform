@@ -7,28 +7,66 @@ import App from "./App.jsx";
 import EditProductPage from "./routes/Products/EditProductPage.jsx";
 import AddReviewPage from "./routes/Reviews/AddReviewPage.jsx";
 import ViewProductPage from "./routes/Products/ViewProductPage.jsx";
+import FavouriteProducts from "./routes/Products/FavouriteProducts.jsx";
+import ShoppingCart from "./routes/Products/ShoppingCart.jsx";
+import Login from "./routes/User/Login.jsx";
+import Register from "./routes/User/Register.jsx";
+import GeneralLayout from "./Layouts/GeneralLayout.jsx";
+import AuthenticationLayout from "./Layouts/AuthenticationLayout.jsx";
+
+// eslint-disable-next-line react-refresh/only-export-components
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <App/>,
+        element: <GeneralLayout/>,
+        children: [
+            {
+                path: "/",
+                element: <App/>,
+            },
+            {
+                path: "/addingProducts",
+                element: <AddProductPage/>,
+            },
+            {
+                path: "/editProducts/:productId",
+                element: <EditProductPage/>,
+            },
+            {
+                path: "/:productId/addReview",
+                element: <AddReviewPage/>,
+            },
+            {
+                path: "/:productId",
+                element: <ViewProductPage/>,
+            },
+            {
+                path: "/favourite-products",
+                element: <FavouriteProducts/>
+            },
+            {
+                path: "/shopping-cart",
+                element: <ShoppingCart/>
+            },
+        ]
     },
     {
-        path: "/addingProducts",
-        element: <AddProductPage/>,
-    },
-    {
-        path: "/editProducts/:productId",
-        element: <EditProductPage/>,
-    },
-    {
-        path: "/:productId/addReview",
-        element: <AddReviewPage/>,
-    },
-    {
-        path: "/:productId",
-        element: <ViewProductPage/>,
-    },
+        path: "/",
+        element: <AuthenticationLayout/>,
+        children: [
+            {
+                path: "/login",
+                element: <Login/>,
+            },
+            {
+                path: "/register",
+                element: <Register/>,
+            },
+        ]
+    }
+
+
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

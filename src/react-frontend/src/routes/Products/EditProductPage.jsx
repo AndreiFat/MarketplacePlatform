@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import {useLocalState} from "../../Utilities/useLocalState.js";
 
 function EditProductPage() {
     //fetch pentru produsul respectiv
@@ -18,7 +19,11 @@ function EditProductPage() {
     });
     const [categories, setCategories] = useState(null);
 
+    const [jwt, setJwt] = useLocalState("", "jwt");
+
     const {productId} = useParams();
+
+    const [categoryIdEdit, setCategoryIdEdit] = useState("")
 
     useEffect(() => {
         console.log(productId);
@@ -26,6 +31,7 @@ function EditProductPage() {
         fetch('http://localhost:8080/categories/viewCategories', {
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`
             },
             method: 'GET'
         })
@@ -47,6 +53,7 @@ function EditProductPage() {
         fetch(`http://localhost:8080/products/${productId}`, {
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`
             }, method: 'GET'
         })
             .then((response) => {
@@ -56,18 +63,18 @@ function EditProductPage() {
             })
             .then((data) => {
                 setProduct(data)
+                setCategoryIdEdit(data.categoryId.id)
                 console.log(data)
             });
     }, [productId]);
 
     const {name, description, price, categoryId, stock} = product;
-    console.log(`da ${product}`)
 
     //apoi edit pentru produsul respectiv
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const selectedCategoryIndex = categories !== null ? categories.findIndex(category => category.id === parseInt(categoryId, 10)) : -1;
+        const selectedCategoryIndex = categories !== null ? categories.findIndex(category => category.id === parseInt(categoryIdEdit, 10)) : -1;
         console.log(selectedCategoryIndex);
 
         const product = {
@@ -75,7 +82,7 @@ function EditProductPage() {
             description,
             price,
             categoryId: {
-                id: parseInt(categoryId),
+                id: parseInt(categoryIdEdit),
                 name: categories[selectedCategoryIndex].name
             },
             stock
@@ -84,6 +91,7 @@ function EditProductPage() {
         fetch(`http://localhost:8080/products/editProduct/${productId}`, {
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`
             },
             method: 'PUT',
             body: JSON.stringify(product),
@@ -131,20 +139,19 @@ function EditProductPage() {
                     />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="exampleForm.categoryId">
+                <Form.Group className="mb-3" name="categoryIdEdit"
+                            controlId="exampleForm.categoryIdEdit">
                     <Form.Label>Category</Form.Label>
-                    <select
-                        name="categoryId"
-                        value={categoryId}
-                        onChange={(e) => setProduct({...product, categoryId: e.target.value})}
-                    >
-                        <option value="">Select Category</option>
-                        {categories !== null &&
-                            categories.map((category) => (
-                                <option key={category.id} value={category.id} data-array={categories.indexOf(category)}>
-                                    {category.name}
-                                </option>
-                            ))}
+                    <select name="categoryIdEdit" value={categoryIdEdit}
+                            onChange={(e) => setCategoryIdEdit(e.target.value)}>
+                        <option value="">Select option</option>
+                        {categories !== null && categories.map(category => (
+                            <option key={category.id} value={category.id}
+                                    data-array={categories.indexOf(category)}>
+                                {category.name}
+                            </option>
+                        ))}
+
                     </select>
                 </Form.Group>
 
@@ -162,7 +169,7 @@ function EditProductPage() {
                     <Button color="primary" type="submit" onClick={handleSubmit}>
                         Update product
                     </Button>
-                    <Button color="secondary">
+                    <Button color="danger">
                         <Link to={'/'}>Cancel</Link>
                     </Button>
                 </Form.Group>

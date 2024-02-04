@@ -13,5 +13,6 @@ public class DiscountCoupon {
     private String code;
     private int discount;
     @ManyToOne()   //optional = true pt ca poate exista o categorie fara discount
+//    @JoinColumn(name = "category_id_id")
     private Category categoryId;
 }

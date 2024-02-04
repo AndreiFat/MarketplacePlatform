@@ -4,7 +4,6 @@ import Button from "react-bootstrap/Button";
 import {Link} from "react-router-dom";
 import {useLocalState} from "../../Utilities/useLocalState.js";
 
-
 function AddProductPage() {
     const [jwt, setJwt] = useLocalState("", "jwt");
 

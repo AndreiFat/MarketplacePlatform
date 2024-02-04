@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +18,8 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    @PostMapping("/addProduct")
-    public Product createProduct(@RequestBody Product product) {
+    @RequestMapping(value = "/addProduct", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    public Product createProduct(@RequestParam Product product) throws IOException {
         productService.create(product);
         return product;
     }

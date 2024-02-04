@@ -1,5 +1,6 @@
 package com.project.marketplaceplatform.service;
 
+import com.project.marketplaceplatform.dto.UserDTO;
 import com.project.marketplaceplatform.model.Authority;
 import com.project.marketplaceplatform.model.Role;
 import com.project.marketplaceplatform.model.User;
@@ -51,5 +52,36 @@ public class UserService {
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: User is null");
         }
+    }
+
+    public ResponseEntity<?> getUserByEmail(User requestUser) {
+        User user = userRepository.findByEmail(requestUser.getEmail()).orElse(null);
+        if (user != null) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(user.getId());
+            userDTO.setName(user.getName());
+            userDTO.setSurname(user.getSurname());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setRole(user.getRole());
+            userDTO.setAuthorities(user.getAuthorities());
+            userDTO.setPhoneNumber(user.getPhoneNumber());
+            userDTO.setDateOfBirth(user.getDateOfBirth());
+
+            return ResponseEntity.ok(userDTO);
+        } else return ResponseEntity.notFound().build();
+    }
+
+    public ResponseEntity<?> editUserById(Long userId, User requestUser) {
+        if (userRepository.findById(userId).isPresent()) {
+            userRepository.findById(userId).ifPresent((user -> {
+                user.setName(requestUser.getName());
+                user.setSurname(requestUser.getSurname());
+                user.setEmail(requestUser.getEmail());
+                user.setPhoneNumber(requestUser.getPhoneNumber());
+                user.setDateOfBirth(requestUser.getDateOfBirth());
+                userRepository.save(user);
+            }));
+            return ResponseEntity.ok().build();
+        } else return ResponseEntity.notFound().build();
     }
 }

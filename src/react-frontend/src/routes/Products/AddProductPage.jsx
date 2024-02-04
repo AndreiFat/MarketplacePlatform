@@ -16,6 +16,9 @@ function AddProductPage() {
     const [stock, setStock] = useState(0)
     const [rating, setRating] = useState(0)
 
+    const [images, setImages] = useState([])
+    const [selectedFiles, setSelectedFiles] = useState([]);
+
 
     useEffect(() => {
         fetch('http://localhost:8080/categories/viewCategories', {
@@ -45,6 +48,10 @@ function AddProductPage() {
         const selectedCategoryIndex = categories !== null ? categories.findIndex(category => category.id === parseInt(categoryId, 10)) : -1;
         console.log(selectedCategoryIndex);
 
+        // Get the paths of the selected files and update the state
+        const paths = selectedFiles.map((file) => URL.createObjectURL(file));
+        setImages(paths);
+
         const product = {
             name,
             description,
@@ -54,8 +61,10 @@ function AddProductPage() {
                 name: categories[selectedCategoryIndex].name
             },
             stock,
-            rating
+            rating,
+            images
         };
+        console.log(images)
 
         fetch('http://localhost:8080/products/addProduct', {
             headers: {
@@ -111,6 +120,20 @@ function AddProductPage() {
                             controlId="exampleForm.stock">
                     <Form.Label>Stock</Form.Label>
                     <Form.Control type="number"/>
+                </Form.Group>
+
+                <Form.Group className="position-relative mb-3">
+                    <Form.Label>Images</Form.Label>
+                    <Form.Control
+                        type="file"
+                        multiple
+                        required
+                        name="file"
+                        onChange={(e) => setSelectedFiles([...selectedFiles, ...e.target.files])}
+                    />
+                    <Form.Control.Feedback type="invalid" tooltip>
+                        {/*{errors.file}*/}
+                    </Form.Control.Feedback>
                 </Form.Group>
 
                 <Form.Group>

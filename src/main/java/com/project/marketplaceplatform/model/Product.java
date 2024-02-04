@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,4 +29,8 @@ public class Product {
     @OneToMany(mappedBy = "product")
     @JsonManagedReference(value = "product-items")
     private List<OrderItem> orderItems;
+
+    @JsonManagedReference(value = "image-product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
 }

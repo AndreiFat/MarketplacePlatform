@@ -4,11 +4,16 @@ import Button from 'react-bootstrap/Button';
 import {faHeart} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useLocalState} from "../Utilities/useLocalState.js";
+import {jwtDecode} from 'jwt-decode';
 
 function Homepage() {
 
     const navigate = useNavigate();
     const [jwt, setJwt] = useLocalState("", "jwt");
+
+    const decodedToken = jwtDecode(jwt);
+    const userRole = decodedToken.authorities;
+    const isAdmin = userRole.includes('ROLE_ADMIN');
 
     const [products, setProducts] = useState(null)
     useEffect(() => {
@@ -30,7 +35,6 @@ function Homepage() {
                 const productsData = await response.json();
                 setProducts(productsData);
                 console.log(productsData);
-                console.log(products);
             } catch (error) {
                 console.error('Error fetching products:', error);
             }
@@ -86,7 +90,6 @@ function Homepage() {
 
     return (
         <div className="container justify-content-center">
-
             {
                 products ? (
                         products.map((product) => (
@@ -105,6 +108,8 @@ function Homepage() {
                         )))
                     : (<></>)}
             <Button variant="light"><Link to={'/addingProducts'}>Add a product</Link></Button>
+            {isAdmin && <Button variant="light"><Link to={'/manageCategories'}>Categories</Link></Button>}
+            {isAdmin && <Button variant="light"><Link to={'/manageDiscountCoupons'}>DiscountCoupons</Link></Button>}
         </div>
     )
 }

@@ -13,8 +13,8 @@ import Login from "./routes/User/Login.jsx";
 import Register from "./routes/User/Register.jsx";
 import GeneralLayout from "./Layouts/GeneralLayout.jsx";
 import AuthenticationLayout from "./Layouts/AuthenticationLayout.jsx";
-
-// eslint-disable-next-line react-refresh/only-export-components
+import ViewCategories from "./routes/Categories/ViewCategories.jsx";
+import ViewDiscountCoupons from "./routes/DiscountCoupons/ViewDiscountCoupons.jsx";
 
 const router = createBrowserRouter([
     {
@@ -49,6 +49,14 @@ const router = createBrowserRouter([
                 path: "/shopping-cart",
                 element: <ShoppingCart/>
             },
+            {
+                path: "/manageCategories",
+                element: <ViewCategories/>
+            },
+            {
+                path: "/manageDiscountCoupons",
+                element: <ViewDiscountCoupons/>
+            }
         ]
     },
     {

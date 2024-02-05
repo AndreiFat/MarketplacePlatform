@@ -1,9 +1,11 @@
 package com.project.marketplaceplatform.controller;
 
 import com.project.marketplaceplatform.model.FavoriteProduct;
+import com.project.marketplaceplatform.model.User;
 import com.project.marketplaceplatform.service.FavoriteProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,8 +17,8 @@ public class FavoriteProductsController {
     FavoriteProductsService favoriteProductsService;
 
     @PostMapping("/toggleProduct")
-    public ResponseEntity<?> toggleFavoriteProduct(@RequestBody FavoriteProduct favoriteProduct) {
-        return favoriteProductsService.toggleFavouriteProduct(favoriteProduct);
+    public ResponseEntity<?> toggleFavoriteProduct(@RequestBody FavoriteProduct favoriteProduct, @AuthenticationPrincipal User user) {
+        return favoriteProductsService.toggleFavouriteProduct(favoriteProduct, user);
     }
 
     @GetMapping("/viewFavoriteProducts/{userId}")

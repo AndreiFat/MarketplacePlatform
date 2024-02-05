@@ -21,8 +21,8 @@ public class FavoriteProductsService {
     @Autowired
     ProductRepository productRepository;
 
-    public ResponseEntity<?> toggleFavouriteProduct(FavoriteProduct favoriteProduct) {
-        User user = userRepository.findByUserId(favoriteProduct.getUserId().getId());
+    public ResponseEntity<?> toggleFavouriteProduct(FavoriteProduct favoriteProduct, User user) {
+//        User user = userRepository.findByUserId(favoriteProduct.getUserId().getId());
         Product product = productRepository.findByProductId(favoriteProduct.getProductId().getId());
         if (product != null && user != null) {
 

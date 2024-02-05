@@ -5,6 +5,7 @@ import {Col, Form, InputGroup} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faUser} from "@fortawesome/free-solid-svg-icons";
 import Button from "react-bootstrap/Button";
+import {Link} from "react-router-dom";
 
 function AccountSettings() {
     const [validated, setValidated] = useState(false);
@@ -21,13 +22,6 @@ function AccountSettings() {
         password: "",
         phoneNumber: "",
     });
-
-    const [nameEdit, setNameEdit] = useState("")
-    const [surnameEdit, setSurnameEdit] = useState("")
-    const [emailEdit, setEmailEdit] = useState("")
-    const [dateOfBirthEdit, setDateOfBirthEdit] = useState(new Date())
-    const [passwordEdit, setPasswordEdit] = useState("")
-    const [phoneNumberEdit, setPhoneNumberEdit] = useState("")
 
     const labels = {
         name: "Name",
@@ -220,6 +214,8 @@ function AccountSettings() {
 
                 <Button type="submit">Submit form</Button>
             </Form>
+
+            <Link to={"/addresses"} className={"me-4"}>Manage Addresses</Link>
         </>
     )
 }

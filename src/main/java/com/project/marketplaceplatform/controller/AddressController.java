@@ -22,7 +22,7 @@ public class AddressController {
     }
 
     @GetMapping("/viewAddresses")
-    public ResponseEntity<?> getAllAddressesOfUser(@RequestBody User user) {
+    public ResponseEntity<?> getAllAddressesOfUser(@AuthenticationPrincipal User user) {
         return addressService.getAddressesByUserId(user);
     }
 
@@ -34,6 +34,6 @@ public class AddressController {
     @DeleteMapping("/deleteAddress/{addressId}")
     public ResponseEntity<?> deleteAddress(@PathVariable Long addressId) {
         addressService.deleteById(addressId);
-        return ResponseEntity.ok("The address " + addressId + " was deleted!");
+        return ResponseEntity.ok().build();
     }
 }

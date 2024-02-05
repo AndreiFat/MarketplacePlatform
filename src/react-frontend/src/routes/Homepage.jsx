@@ -14,10 +14,10 @@ function Homepage() {
     const decodedToken = jwtDecode(jwt);
     const userRole = decodedToken.authorities;
     const isAdmin = userRole.includes('ROLE_ADMIN');
+    const userEmail = decodedToken.sub;
 
     const [products, setProducts] = useState(null)
     const [images, setImages] = useState(null)
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,7 +37,7 @@ function Homepage() {
                     console.log(productDetails);
                     setProducts(productDetails);
                 } else {
-                    console.error('User details are null or undefined.');
+                    console.error('Product details are null or undefined.');
                 }
                 // Second Fetch
                 const imagesFetch = await fetch(`http://localhost:8080/products/getAllImages/1`, {
@@ -52,8 +52,9 @@ function Homepage() {
                     console.log(imageDetails);
                     setImages(imageDetails);
                 } else {
-                    console.error('User details are null or undefined.');
+                    console.error('Image details are null or undefined.');
                 }
+
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -82,9 +83,9 @@ function Homepage() {
             productId: {
                 id: productId
             },
-            userId: {
-                id: 2
-            }
+            // userId: {
+            //     id: 2
+            // }
         }
         console.log(`Saving as favourite ${productId}`)
         fetch(`http://localhost:8080/favoriteProducts/toggleProduct`, {
@@ -116,16 +117,22 @@ function Homepage() {
                                 <Link to={`${product.id}`}><span>{product.id}</span></Link>
                                 <span>{product.name}</span>
                                 <span>{product.price}</span>
-                                {
-                                    product.images ? (
-                                        product.images.map((image) => (
-                                            <img height="100px" width="100px" key={image.id}
-                                                 src={`data:image/jpeg;base64,${image.imageData}`}
-                                                 alt={image.name}/>
-                                        ))
-
-                                    ) : <></>
+                                {product.images[0] ?
+                                    (<img height="100px" width="100px" key={product.images[0].id}
+                                          src={`data:image/jpeg;base64,${product.images[0].imageData}`}
+                                          alt={product.images[0].name}/>) : <></>
                                 }
+                                {/*ALL IMAGES*/}
+                                {/*{*/}
+                                {/*    product.images ? (*/}
+                                {/*        product.images.map((image) => (*/}
+                                {/*            <img height="100px" width="100px" key={image.id}*/}
+                                {/*                 src={`data:image/jpeg;base64,${image.imageData}`}*/}
+                                {/*                 alt={image.name}/>*/}
+                                {/*        ))*/}
+
+                                {/*    ) : <></>*/}
+                                {/*}*/}
                                 <span><Button variant="warning"><Link
                                     to={`/editProducts/${product.id}`}>Edit</Link></Button></span>
                                 <span><Button variant="danger"
@@ -133,6 +140,7 @@ function Homepage() {
                                 <span><Button variant="primary"
                                               onClick={() => saveAsFavourite(product.id)}><FontAwesomeIcon icon={faHeart}
                                                                                                            size={"xl"}/></Button></span>
+                                <span></span>
                             </div>
                         )))
                     : (<></>)}

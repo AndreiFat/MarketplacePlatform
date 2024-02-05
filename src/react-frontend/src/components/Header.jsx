@@ -18,13 +18,6 @@ function Header() {
                             className="d-inline-block align-top me-1"
                             alt="React Bootstrap logo"
                         />
-                        <img
-                            src="vite.svg"
-                            width="30"
-                            height="30"
-                            className="d-inline-block align-top me-4"
-                            alt="React Bootstrap logo"
-                        />
                         Web Marketplace
                     </Navbar.Brand>
                     <div>
@@ -41,7 +34,12 @@ function Header() {
                     <div>
                         <Link to={"/favourite-products"} className={"me-4"}><FontAwesomeIcon icon={faHeart}
                                                                                              size={"xl"}/></Link>
-                        <Link to={"/shopping-cart"}><FontAwesomeIcon icon={faCartShopping} size={"xl"}/></Link>
+                        <Link to={"/shopping-cart"} className={"me-4"}><FontAwesomeIcon icon={faCartShopping}
+                                                                                        size={"xl"}/></Link>
+                        <Link to={"/login"} className={"me-4"}>Login</Link>
+                        <Link to={"/register"} className={"me-4"}>Register</Link>
+                        <Link to={"/accountSettings"} className={"me-4"}>Account Settings</Link>
+                        <Link to={"/addresses"} className={"me-4"}>Addresses</Link>
                     </div>
                 </Container>
             </Navbar>

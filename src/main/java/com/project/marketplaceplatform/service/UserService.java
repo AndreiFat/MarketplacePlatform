@@ -79,6 +79,7 @@ public class UserService {
                 user.setEmail(requestUser.getEmail());
                 user.setPhoneNumber(requestUser.getPhoneNumber());
                 user.setDateOfBirth(requestUser.getDateOfBirth());
+                user.setPassword(passwordEncoder().encode(requestUser.getPassword()));
                 userRepository.save(user);
             }));
             return ResponseEntity.ok().build();

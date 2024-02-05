@@ -1,10 +1,22 @@
 import {Link, useParams} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
+import {useLocalState} from "../../Utilities/useLocalState.js";
+import {Form, Modal} from "react-bootstrap";
+import {jwtDecode} from "jwt-decode";
 
 function ViewProductPage() {
     const {productId} = useParams();
     console.log(productId);
+
+    const [jwt, setJwt] = useLocalState("", "jwt");
+    const decodedToken = jwtDecode(jwt);
+    const userEmail = decodedToken.sub;
+    console.log("decodat " + userEmail);
+
+    function verifyOwnerOfReview(userOfReviewEmail) {
+        return userEmail === userOfReviewEmail;
+    }
 
     const [product, setProduct] = useState({
         name: '',
@@ -17,36 +29,16 @@ function ViewProductPage() {
         stock: 0,
         rating: 0,
     });
-    const [categories, setCategories] = useState(null);
     const [reviews, setReviews] = useState(null);
 
+    const [reviewDescriptionEdit, setReviewDescriptionEdit] = useState("");
+    const [numberOfStarsEdit, setNumberOfStarsEdit] = useState(0);
+
     useEffect(() => {
-        console.log(productId);
-
-        fetch('http://localhost:8080/categories/viewCategories', {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            method: 'GET'
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((categoriesData) => {
-                setCategories(categoriesData);
-                console.log(categoriesData);
-            })
-            .catch((error) => {
-                console.error('Error fetching categories:', error);
-            });
-
-
         fetch(`http://localhost:8080/products/${productId}`, {
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`,
             }, method: 'GET'
         })
             .then((response) => {
@@ -64,6 +56,7 @@ function ViewProductPage() {
         fetch(`http://localhost:8080/products/${productId}/viewReviews`, {
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`,
             },
             method: 'GET'
         })
@@ -82,6 +75,62 @@ function ViewProductPage() {
             });
     }, []);
 
+    function deleteReviewByUser(reviewId) {
+        fetch(`http://localhost:8080/products/deleteReview/${reviewId}`, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            },
+            method: 'DELETE',
+        })
+            .then((response) => {
+                if (response.status === 200) {
+                    window.location.reload();
+                } else {
+                    console.log("Failed to delete!")
+                }
+            })
+            .catch((error) => {
+                console.error('Error deleting review:', error);
+            });
+    }
+
+    const [showModals, setShowModals] = useState({});
+    const handleShowForEdit = (reviewId, description, numberOfStars) => {
+        setReviewDescriptionEdit(description);
+        setNumberOfStarsEdit(numberOfStars);
+        setShowModals((prevShowModals) => ({
+            ...prevShowModals,
+            [reviewId]: true,
+        }));
+    };
+
+    const handleCloseForEdit = (categoryId) => {
+        setReviewDescriptionEdit('');
+        setNumberOfStarsEdit(0);
+        setShowModals((prevShowModals) => ({
+            ...prevShowModals,
+            [categoryId]: false,
+        }));
+    };
+
+    function editReviewByUser(reviewId) {
+        const reviewBody = {
+            description: reviewDescriptionEdit,
+            numberOfStars: numberOfStarsEdit
+        };
+
+        fetch(`http://localhost:8080/products/editReview/${reviewId}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`
+            },
+            method: 'PUT',
+            body: JSON.stringify(reviewBody),
+        }).then((response) => {
+            console.log(response.status);
+            window.location.reload();
+        });
+    }
 
     return (
         <>
@@ -103,15 +152,62 @@ function ViewProductPage() {
                                 <span>Descriere review: {review.description}</span>
                                 <span>Number of stars: {review.numberOfStars} * </span>
 
-                                {/*de facut sa avem si edit/delete pe reviews doar daca e autentificat userul*/}
-
-                                
-                                {/*<span><Button variant="warning"><Link*/}
-                                {/*    to={`/editProducts/${product.id}`}>Edit</Link></Button></span>*/}
-                                {/*<span><Button variant="danger">Delete</Button></span>*/}
+                                {verifyOwnerOfReview(review.userId.email) ? <div>
+                                <span><Button variant="warning" data-id={review.id}
+                                              onClick={() => handleShowForEdit(review.id, review.description, review.numberOfStars)}>Edit review</Button></span>
+                                        <span><Button variant="danger" data-id={review.id}
+                                                      onClick={() => deleteReviewByUser(review.id)}>Delete review</Button></span>
+                                    </div>
+                                    : <div><p>nu este owner ul</p></div>}
                             </div>
                         )))
-                    : (<></>)}
+                    : (<></>)
+            }
+
+            {
+                reviews ? (
+                        reviews.map((review) => (
+                            <Modal key={review.id} show={showModals[review.id] || false}
+                                   onHide={() => handleCloseForEdit(review.id)}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>{review.id}</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    {review.id}
+                                    <Form>
+                                        <Form.Group className="mb-3" controlId="exampleForm.reviewDescription">
+                                            <Form.Label>Review Description</Form.Label>
+                                            <Form.Control
+                                                type="text"
+                                                value={reviewDescriptionEdit}
+                                                autoFocus
+                                                onChange={(e) => setReviewDescriptionEdit(e.target.value)}
+                                            />
+                                        </Form.Group>
+                                        <Form.Group className="mb-3" controlId="exampleForm.numberOfStars">
+                                            <Form.Label>Number of Stars</Form.Label>
+                                            <Form.Control
+                                                type="number"
+                                                value={numberOfStarsEdit}
+                                                autoFocus
+                                                onChange={(e) => setNumberOfStarsEdit(e.target.value)}
+                                            />
+                                        </Form.Group>
+                                    </Form>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={() => handleCloseForEdit(review.id)}>
+                                        Close
+                                    </Button>
+                                    <Button variant="primary" type="submit" onClick={() => editReviewByUser(review.id)}>
+                                        Save Changes
+                                    </Button>
+                                </Modal.Footer>
+                            </Modal>
+                        )))
+                    : (<></>)
+            }
+
         </>
     )
 }

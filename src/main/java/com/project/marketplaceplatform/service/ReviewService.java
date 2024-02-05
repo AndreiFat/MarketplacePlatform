@@ -45,18 +45,18 @@ public class ReviewService {
     }
 
     public ResponseEntity<Review> update(Long reviewId, Review review, User user) {
-        if (Objects.equals(review.getUserId().getId(), user.getId())) {
-            reviewRepository.findById(reviewId).ifPresent((foundReview -> {
-                foundReview.setDescription(review.getDescription());
-                foundReview.setNumberOfStars(review.getNumberOfStars());
-                reviewRepository.save(foundReview);
-            }));
-        }
+        reviewRepository.findById(reviewId).ifPresent((foundReview -> {
+            foundReview.setDescription(review.getDescription());
+            foundReview.setNumberOfStars(review.getNumberOfStars());
+            reviewRepository.save(foundReview);
+        }));
         return ResponseEntity.ok().build();
     }
 
-    public void deleteById(Long reviewId) {
-        reviewRepository.deleteById(reviewId);
+    public void deleteById(Long reviewId, User user) {
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        if (review != null && Objects.equals(review.getUserId().getId(), user.getId())) {
+            reviewRepository.deleteById(reviewId);
+        }
     }
-
 }

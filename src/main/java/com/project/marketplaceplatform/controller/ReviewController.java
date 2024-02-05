@@ -1,9 +1,11 @@
 package com.project.marketplaceplatform.controller;
 
 import com.project.marketplaceplatform.model.Review;
+import com.project.marketplaceplatform.model.User;
 import com.project.marketplaceplatform.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,16 +25,14 @@ public class ReviewController {
         return reviewService.getAllReviewsByProductId(productId);
     }
 
-//todo de facut dupa ce facem autentificarea
+    @PutMapping("/products/editReview/{reviewId}")
+    public ResponseEntity<?> editReview(@PathVariable Long reviewId, @RequestBody Review review, @AuthenticationPrincipal User user) {
+        return reviewService.update(reviewId, review, user);
+    }
 
-//    @PutMapping("/editProduct/{productId}")
-//    public ResponseEntity<Product> editProduct(@PathVariable Long productId, @RequestBody Product product){
-//        return productService.update(productId, product);
-//    }
-//
-//    @DeleteMapping("/deleteProduct/{productId}")
-//    public ResponseEntity<?> deleteProduct(@PathVariable Long productId){
-//        productService.deleteById(productId);
-//        return ResponseEntity.ok("The product was deleted!");
-//    }
+    @DeleteMapping("/products/deleteReview/{reviewId}")
+    public ResponseEntity<?> deleteReview(@PathVariable Long reviewId, @AuthenticationPrincipal User user) {
+        reviewService.deleteById(reviewId, user);
+        return ResponseEntity.ok("The review was deleted!");
+    }
 }

@@ -1,15 +1,12 @@
 package com.project.marketplaceplatform.service;
 
 import com.project.marketplaceplatform.model.Address;
-import com.project.marketplaceplatform.model.Product;
 import com.project.marketplaceplatform.model.User;
 import com.project.marketplaceplatform.repository.AddressRepository;
 import com.project.marketplaceplatform.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AddressService {
@@ -20,20 +17,19 @@ public class AddressService {
     @Autowired
     UserRepository userRepository;
 
-    public ResponseEntity<?> create(Address address){
-        User user = userRepository.findByUserId(address.getUserId().getId());
+    public ResponseEntity<?> create(Address address, User user) {
         address.setUserId(user);
-        if(user != null)
+        if (user != null)
             return ResponseEntity.ok(addressRepository.save(address));
         else
             return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<?> getAddressesByUserId(User user){
+    public ResponseEntity<?> getAddressesByUserId(User user) {
         User foundUser = userRepository.findByUserId(user.getId());
-        if(foundUser != null) {
+        if (foundUser != null) {
             return ResponseEntity.ok(addressRepository.findAddressByUserId(user));
-        }else{
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
@@ -48,7 +44,7 @@ public class AddressService {
         return ResponseEntity.ok().build();
     }
 
-    public void deleteById(Long addressId){
+    public void deleteById(Long addressId) {
         addressRepository.deleteById(addressId);
     }
 }

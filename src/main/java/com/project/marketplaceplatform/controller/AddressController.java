@@ -5,6 +5,7 @@ import com.project.marketplaceplatform.model.User;
 import com.project.marketplaceplatform.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +17,8 @@ public class AddressController {
     AddressService addressService;
 
     @PostMapping("/addAddress")
-    public ResponseEntity<?> createAddress(@RequestBody Address address) {
-        return addressService.create(address);
+    public ResponseEntity<?> createAddress(@RequestBody Address address, @AuthenticationPrincipal User user) {
+        return addressService.create(address, user);
     }
 
     @GetMapping("/viewAddresses")

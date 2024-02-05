@@ -2,10 +2,13 @@ import {Link, useParams} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
 import {useLocalState} from "../../Utilities/useLocalState.js";
+
 import {Form, Modal} from "react-bootstrap";
 import {jwtDecode} from "jwt-decode";
 
 function ViewProductPage() {
+
+    const [jwt, setJwt] = useLocalState("", "jwt");
     const {productId} = useParams();
     console.log(productId);
 
@@ -141,6 +144,17 @@ function ViewProductPage() {
             <div>Pret: {product.price} $</div>
             <div>Stoc: {product.stock}</div>
             <div>Rating: {product.rating}</div>
+            {/*<img src={`http://localhost:8080/${product.images[0].imagePath}`} alt=""/>*/}
+            {
+                product.images ? (
+                    product.images.map((image) => (
+                        <img height="100px" width="100px" key={image.id}
+                             src={`data:image/jpeg;base64,${image.imageData}`}
+                             alt={image.name}/>
+                    ))
+
+                ) : <></>
+            }
             <span><Button variant="info"><Link
                 to={`/${product.id}/addReview`}>Add review</Link></Button></span>
 

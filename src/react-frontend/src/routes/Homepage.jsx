@@ -16,10 +16,15 @@ function Homepage() {
     const isAdmin = userRole.includes('ROLE_ADMIN');
 
     const [products, setProducts] = useState(null)
+    const [images, setImages] = useState(null)
+
+
     useEffect(() => {
         const fetchData = async () => {
+
             try {
-                const response = await fetch('http://localhost:8080/products/viewProducts', {
+                //First Fetch
+                const productFetch = await fetch('http://localhost:8080/products/viewProducts', {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${jwt}`,
@@ -27,19 +32,32 @@ function Homepage() {
                     method: 'GET',
 
                 });
-
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch products. Status: ${response.status}`);
+                const productDetails = await productFetch.json();
+                if (productDetails) {
+                    console.log(productDetails);
+                    setProducts(productDetails);
+                } else {
+                    console.error('User details are null or undefined.');
                 }
-
-                const productsData = await response.json();
-                setProducts(productsData);
-                console.log(productsData);
+                // Second Fetch
+                const imagesFetch = await fetch(`http://localhost:8080/products/getAllImages/1`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${jwt}`,
+                    },
+                    method: 'GET',
+                });
+                const imageDetails = await imagesFetch.json();
+                if (imageDetails) {
+                    console.log(imageDetails);
+                    setImages(imageDetails);
+                } else {
+                    console.error('User details are null or undefined.');
+                }
             } catch (error) {
-                console.error('Error fetching products:', error);
+                console.error('Error:', error);
             }
-        };
-        console.log("called twice")
+        }
         fetchData();
     }, []);
 
@@ -98,6 +116,16 @@ function Homepage() {
                                 <Link to={`${product.id}`}><span>{product.id}</span></Link>
                                 <span>{product.name}</span>
                                 <span>{product.price}</span>
+                                {
+                                    product.images ? (
+                                        product.images.map((image) => (
+                                            <img height="100px" width="100px" key={image.id}
+                                                 src={`data:image/jpeg;base64,${image.imageData}`}
+                                                 alt={image.name}/>
+                                        ))
+
+                                    ) : <></>
+                                }
                                 <span><Button variant="warning"><Link
                                     to={`/editProducts/${product.id}`}>Edit</Link></Button></span>
                                 <span><Button variant="danger"

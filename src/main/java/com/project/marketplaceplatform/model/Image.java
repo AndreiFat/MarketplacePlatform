@@ -12,7 +12,10 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String imagePath;
+    //    private String imagePath;
+    @Lob
+    @Column(columnDefinition = "MEDIUMTEXT")
+    private String imageData;
 
     @ManyToOne
     @JoinColumn(name = "product_id")

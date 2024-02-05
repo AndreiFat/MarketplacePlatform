@@ -5,6 +5,7 @@ import com.project.marketplaceplatform.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,10 +19,20 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    @RequestMapping(value = "/addProduct", method = RequestMethod.POST, consumes = {"multipart/form-data"})
-    public Product createProduct(@RequestParam Product product) throws IOException {
+    @PostMapping("/addProduct")
+    public Product createProduct(@RequestBody Product product) {
         productService.create(product);
         return product;
+    }
+
+    @PostMapping("/saveImagesToProduct/{productId}")
+    public ResponseEntity<?> saveImagesToProduct(@PathVariable Long productId, @RequestParam("files") MultipartFile[] files) throws IOException {
+        return productService.saveImagesToProduct(productId, files);
+    }
+
+    @GetMapping("/getAllImages/{productId}")
+    public ResponseEntity<?> getAllImages(@PathVariable Long productId) throws IOException {
+        return productService.getAllImages(productId);
     }
 
     @GetMapping("/viewProducts")

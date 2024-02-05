@@ -1,8 +1,11 @@
 import {Link, useParams} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
+import {useLocalState} from "../../Utilities/useLocalState.js";
 
 function ViewProductPage() {
+
+    const [jwt, setJwt] = useLocalState("", "jwt");
     const {productId} = useParams();
     console.log(productId);
 
@@ -26,6 +29,7 @@ function ViewProductPage() {
         fetch('http://localhost:8080/categories/viewCategories', {
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`,
             },
             method: 'GET'
         })
@@ -47,6 +51,7 @@ function ViewProductPage() {
         fetch(`http://localhost:8080/products/${productId}`, {
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`,
             }, method: 'GET'
         })
             .then((response) => {
@@ -64,6 +69,7 @@ function ViewProductPage() {
         fetch(`http://localhost:8080/products/${productId}/viewReviews`, {
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`,
             },
             method: 'GET'
         })
@@ -92,6 +98,17 @@ function ViewProductPage() {
             <div>Pret: {product.price} $</div>
             <div>Stoc: {product.stock}</div>
             <div>Rating: {product.rating}</div>
+            {/*<img src={`http://localhost:8080/${product.images[0].imagePath}`} alt=""/>*/}
+            {
+                product.images ? (
+                    product.images.map((image) => (
+                        <img height="100px" width="100px" key={image.id}
+                             src={`data:image/jpeg;base64,${image.imageData}`}
+                             alt={image.name}/>
+                    ))
+
+                ) : <></>
+            }
             <span><Button variant="info"><Link
                 to={`/${product.id}/addReview`}>Add review</Link></Button></span>
 
@@ -105,7 +122,7 @@ function ViewProductPage() {
 
                                 {/*de facut sa avem si edit/delete pe reviews doar daca e autentificat userul*/}
 
-                                
+
                                 {/*<span><Button variant="warning"><Link*/}
                                 {/*    to={`/editProducts/${product.id}`}>Edit</Link></Button></span>*/}
                                 {/*<span><Button variant="danger">Delete</Button></span>*/}

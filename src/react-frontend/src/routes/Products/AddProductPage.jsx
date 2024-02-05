@@ -16,8 +16,9 @@ function AddProductPage() {
     const [stock, setStock] = useState(0)
     const [rating, setRating] = useState(0)
 
-    const [images, setImages] = useState([])
+    const [images, setImages] = useState([]);
     const [selectedFiles, setSelectedFiles] = useState([]);
+    const [product, setProduct] = useState(null);
 
 
     useEffect(() => {
@@ -48,10 +49,6 @@ function AddProductPage() {
         const selectedCategoryIndex = categories !== null ? categories.findIndex(category => category.id === parseInt(categoryId, 10)) : -1;
         console.log(selectedCategoryIndex);
 
-        // Get the paths of the selected files and update the state
-        const paths = selectedFiles.map((file) => URL.createObjectURL(file));
-        setImages(paths);
-
         const product = {
             name,
             description,
@@ -62,27 +59,55 @@ function AddProductPage() {
             },
             stock,
             rating,
-            images
         };
-        console.log(images)
 
-        fetch('http://localhost:8080/products/addProduct', {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${jwt}`,
-            },
-            method: 'POST',
-            body: JSON.stringify(product),
-        }).then((response) => response.json())
-            .then((product) => {
-                console.log(product);
+        const form = new FormData();
+
+        for (let i = 0; i < images.length; i++) {
+            form.append('files', images[i]);
+        }
+
+
+        const sendData = async () => {
+
+            const productFetch = await fetch('http://localhost:8080/products/addProduct', {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${jwt}`,
+                },
+                method: 'POST',
+                body: JSON.stringify(product),
+            })
+            const productDetails = await productFetch.json();
+            if (productDetails) {
+                console.log(productDetails);
+                setProduct(productDetails);
+            } else {
+                console.error('User details are null or undefined.');
+            }
+
+            const imagesFetch = await fetch(`http://localhost:8080/products/saveImagesToProduct/${productDetails.id}`, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+                method: 'POST',
+                body: form
             });
+            const imageDetails = await imagesFetch.json();
+            if (imageDetails) {
+                console.log(imageDetails);
+                setImages(imageDetails);
+            } else {
+                console.error('User details are null or undefined.');
+            }
+        }
+        sendData()
     }
 
 
     return (
         <>
-            <Form>
+            <Form encType="multipart/form-data">
                 <Form.Group className="mb-3" name="name" value={name} onChange={(e) => setName(e.target.value)}
                             controlId="exampleForm.name">
                     <Form.Label>Product name</Form.Label>
@@ -129,7 +154,7 @@ function AddProductPage() {
                         multiple
                         required
                         name="file"
-                        onChange={(e) => setSelectedFiles([...selectedFiles, ...e.target.files])}
+                        onChange={(e) => setImages([...images, ...e.target.files])}
                     />
                     <Form.Control.Feedback type="invalid" tooltip>
                         {/*{errors.file}*/}

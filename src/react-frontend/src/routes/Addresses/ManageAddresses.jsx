@@ -18,7 +18,6 @@ function ManageAddresses() {
     const [countryEdit, setCountryEdit] = useState("")
 
     useEffect(() => {
-
         const fetchData = async () => {
             try {
                 const userFetch = await fetch(`http://localhost:8080/address/viewAddresses`, {

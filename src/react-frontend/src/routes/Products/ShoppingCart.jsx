@@ -1,7 +1,8 @@
 function ShoppingCart() {
+
     return (
         <>
-            Shopping cart
+            Shopping Cart
         </>
     )
 }

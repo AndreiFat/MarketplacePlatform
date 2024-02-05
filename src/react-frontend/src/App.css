@@ -1,0 +1,53 @@
+.floating-element {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 40px; /* Adjust the margin as needed */
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.offcanvas-footer {
+    position: absolute;
+    bottom: 10px;
+    width: calc(100% - 20px); /* Adjust padding as needed */
+    padding: 10px;
+    right: 10px; /* Adjust right padding as needed */
+}
+
+.button-radio-group {
+    display: flex;
+}
+
+.radio-button {
+    appearance: none;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    color: #333;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 5px;
+    padding: 10px 20px 10px 20px;
+    text-align: center;
+    user-select: none;
+    border-radius: 10px;
+
+}
+
+.radio-button:hover {
+    background-color: #d0d0d0;
+}
+
+.radio-button.selected {
+    background-color: #ffc600;
+    border: 2px solid #eeb600;
+    color: #fff;
+}
+
+.radio-button input {
+    display: none;
+}

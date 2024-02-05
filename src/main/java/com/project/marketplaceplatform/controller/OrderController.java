@@ -5,6 +5,7 @@ import com.project.marketplaceplatform.model.User;
 import com.project.marketplaceplatform.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,12 +16,12 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping("/addOrder")
-    public ResponseEntity<?> createOrder(@RequestBody OrderRequestDTO orderRequest) {
-        return orderService.createOrder(orderRequest);
+    public ResponseEntity<?> createOrder(@RequestBody OrderRequestDTO orderRequest, @AuthenticationPrincipal User user) {
+        return orderService.createOrder(orderRequest, user);
     }
 
     @GetMapping("/viewOrders")
-    public ResponseEntity<?> getAllOrders(@RequestBody User user) {
+    public ResponseEntity<?> getAllOrders(@AuthenticationPrincipal User user) {
         return orderService.getOrdersByUserId(user);
     }
 

@@ -1,21 +1,57 @@
 import {Link, useNavigate, useParams} from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import {useLocalState} from "../../Utilities/useLocalState.js";
+import {jwtDecode} from "jwt-decode";
 
 function AddReviewPage() {
     //productId o sa fie luat din url
     const {productId} = useParams();
-    console.log(productId)
+    console.log(productId);
+    const [jwt, setJwt] = useLocalState("", "jwt");
 
+    const decodedToken = jwtDecode(jwt);
+    const userEmail = decodedToken.sub;
+
+    console.log("mailul decodat" + userEmail)
+    const [user, setUser] = useState(null);
     const [description, setDescription] = useState('');
     const [numberOfStars, setNumberOfStars] = useState(0);
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const userBody = {
+            email: userEmail
+        }
+        const fetchData = async () => {
+            try {
+                const userFetch = await fetch(`http://localhost:8080/users/viewUser`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${jwt}`
+                    },
+                    method: 'POST',
+                    body: JSON.stringify(userBody),
+                });
+                const userDetails = await userFetch.json();
+                if (userDetails) {
+                    console.log("userul care vine" + userDetails.id);
+                    setUser(userDetails);
+                } else {
+                    console.error('User details are null or undefined.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+        fetchData();
+    }, []);
+
+
     const handleSubmitReview = (e) => {
         e.preventDefault();
-
 
         const review = {
             description,
@@ -24,13 +60,14 @@ function AddReviewPage() {
                 id: productId
             },
             userId: {
-                id: 1    //momentan default user-ul!!!
+                id: user.id
             }
         };
 
         fetch(`http://localhost:8080/products/${productId}/addReview`, {
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`
             },
             method: 'POST',
             body: JSON.stringify(review),

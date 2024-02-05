@@ -83,13 +83,14 @@ function Homepage() {
                 id: productId
             },
             userId: {
-                id: 1
+                id: 2
             }
         }
         console.log(`Saving as favourite ${productId}`)
         fetch(`http://localhost:8080/favoriteProducts/toggleProduct`, {
             headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`
             },
             method: 'POST',
             body: JSON.stringify(favouriteProduct),

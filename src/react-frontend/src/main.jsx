@@ -15,6 +15,8 @@ import GeneralLayout from "./Layouts/GeneralLayout.jsx";
 import AuthenticationLayout from "./Layouts/AuthenticationLayout.jsx";
 import ViewCategories from "./routes/Categories/ViewCategories.jsx";
 import ViewDiscountCoupons from "./routes/DiscountCoupons/ViewDiscountCoupons.jsx";
+import AccountSettings from "./routes/User/AccountSettings.jsx";
+import ManageAddresses from "./routes/Addresses/ManageAddresses.jsx";
 
 const router = createBrowserRouter([
     {
@@ -56,7 +58,15 @@ const router = createBrowserRouter([
             {
                 path: "/manageDiscountCoupons",
                 element: <ViewDiscountCoupons/>
-            }
+            },
+            {
+                path: "/accountSettings",
+                element: <AccountSettings/>
+            },
+            {
+                path: "/addresses",
+                element: <ManageAddresses/>
+            },
         ]
     },
     {

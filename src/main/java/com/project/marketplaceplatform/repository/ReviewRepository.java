@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-     //functie declarata pentru a returna doar reviewurile de la un anumit produs
-     List<Review> findReviewByProductId(Product productId);
+    //functie declarata pentru a returna doar reviewurile de la un anumit produs
+    List<Review> findReviewByProductId(Product productId);
+
+    Long countByProductId(Product product);
 }

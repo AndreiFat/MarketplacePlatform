@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
@@ -30,10 +29,10 @@ public class ProductController {
         return productService.saveImagesToProduct(productId, files);
     }
 
-    @GetMapping("/getAllImages/{productId}")
-    public ResponseEntity<?> getAllImages(@PathVariable Long productId) throws IOException {
-        return productService.getAllImages(productId);
-    }
+//    @GetMapping("/getAllImages/{productId}")
+//    public ResponseEntity<?> getAllImages(@PathVariable Long productId) throws IOException {
+//        return productService.getAllImages(productId);
+//    }
 
     @GetMapping("/viewProducts")
     public List<?> getAllProducts() {
@@ -41,7 +40,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public Optional<Product> getProduct(@PathVariable Long productId) {
+    public Product getProduct(@PathVariable Long productId) {
         return productService.findById(productId);
     }
 

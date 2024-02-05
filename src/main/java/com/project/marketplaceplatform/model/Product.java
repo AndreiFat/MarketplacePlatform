@@ -20,17 +20,21 @@ public class Product {
     @ManyToOne(optional = false)
     private Category categoryId;
     private int stock;
-    private double rating;
+    private String rating;
     //    private int sellerId;
     @JsonManagedReference(value = "review-product")
     @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference(value = "product-items")
     private List<OrderItem> orderItems;
 
     @JsonManagedReference(value = "image-product")
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
+
+    @JsonManagedReference(value = "favorite-product")
+    @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FavoriteProduct> favoriteProducts;
 }

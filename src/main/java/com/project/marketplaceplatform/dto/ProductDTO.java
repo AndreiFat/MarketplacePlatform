@@ -11,6 +11,6 @@ public class ProductDTO {
     private double price;
     private Category categoryId;
     private int stock;
-    private double rating;
+    private String rating;
     private int sellerId;
 }

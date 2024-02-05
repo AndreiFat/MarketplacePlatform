@@ -7,8 +7,7 @@ import {Form, Modal} from "react-bootstrap";
 import {jwtDecode} from "jwt-decode";
 
 function ViewProductPage() {
-
-    const [jwt, setJwt] = useLocalState("", "jwt");
+    
     const {productId} = useParams();
     console.log(productId);
 

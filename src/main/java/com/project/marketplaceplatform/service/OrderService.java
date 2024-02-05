@@ -68,20 +68,15 @@ public class OrderService {
     }
 
     @Transactional
-    public ResponseEntity<?> createOrder(OrderRequestDTO orderRequest) {
+    public ResponseEntity<?> createOrder(OrderRequestDTO orderRequest, User user) {
         Order order = new Order();
-        User user;
         Address address;
-
-
         List<ProductRequestDTO> productIds = orderRequest.getProductIds();
         int quantity = orderRequest.getQuantity();
 
         double price = orderRequest.getPrice();
 
         try {
-            user = userRepository.findById(orderRequest.getUser().getId()).orElseThrow(()
-                    -> new EntityNotFoundException("User not found with id: " + orderRequest.getUser().getId()));
             address = addressRepository.findById(orderRequest.getAddress().getId()).orElseThrow(()
                     -> new EntityNotFoundException("Address not found with id: " + orderRequest.getAddress().getId()));
         } catch (EntityNotFoundException ignored) {
@@ -102,6 +97,8 @@ public class OrderService {
             try {
                 Product product = productRepository.findById(productDTO.getId())
                         .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + productDTO.getId()));
+                product.setStock(product.getStock() - productDTO.getQuantity());
+                productRepository.save(product);
                 OrderItem orderItem = new OrderItem();
                 orderItem.setProduct(product);
                 orderItem.setQuantity(productDTO.getQuantity());

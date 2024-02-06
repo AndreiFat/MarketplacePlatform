@@ -15,6 +15,9 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @Lob
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String description;
     private double price;
     @ManyToOne(optional = false)
@@ -34,7 +37,4 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
-    @JsonManagedReference(value = "favorite-product")
-    @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FavoriteProduct> favoriteProducts;
 }

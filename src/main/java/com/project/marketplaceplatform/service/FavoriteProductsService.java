@@ -21,9 +21,11 @@ public class FavoriteProductsService {
     @Autowired
     ProductRepository productRepository;
 
-    public ResponseEntity<?> toggleFavouriteProduct(FavoriteProduct favoriteProduct, User user) {
-//        User user = userRepository.findByUserId(favoriteProduct.getUserId().getId());
-        Product product = productRepository.findByProductId(favoriteProduct.getProductId().getId());
+    public ResponseEntity<?> toggleFavouriteProduct(FavoriteProduct favoriteProduct) {
+        User user = userRepository.findById(favoriteProduct.getUserId().getId()).orElse(null);
+
+        Product product = productRepository.findById(favoriteProduct.getProductId().getId()).orElse(null);
+
         if (product != null && user != null) {
 
             FavoriteProduct foundFavouriteProduct = favoriteProductsRepository.findByUserIdAndProductId(user, product);
@@ -33,8 +35,8 @@ public class FavoriteProductsService {
                 favoriteProduct.setProductId(product);
                 return ResponseEntity.ok(favoriteProductsRepository.save(favoriteProduct));
             } else {
-                favoriteProductsRepository.delete(foundFavouriteProduct);
-                return ResponseEntity.ok("Deleted!");
+                favoriteProductsRepository.deleteById(foundFavouriteProduct.getId());
+                return ResponseEntity.ok().build();
             }
         } else {
             return ResponseEntity.notFound().build();
@@ -42,9 +44,9 @@ public class FavoriteProductsService {
     }
 
     public ResponseEntity<?> getFavoriteProductsByUserId(Long userId) {
-        User foundUser = userRepository.findByUserId(userId);
+        User foundUser = userRepository.findById(userId).orElse(null);
         if (foundUser != null) {
-            return ResponseEntity.ok(favoriteProductsRepository.findFavoriteProductByUserId(foundUser));
+            return ResponseEntity.ok(favoriteProductsRepository.findFavoriteProductsByUserId(foundUser));
         } else {
             return ResponseEntity.notFound().build();
         }

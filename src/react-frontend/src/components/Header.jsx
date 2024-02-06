@@ -1,37 +1,75 @@
 import {Container, Navbar} from "react-bootstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faHeart} from "@fortawesome/free-solid-svg-icons";
 import {Link} from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {jwtDecode} from "jwt-decode";
+import {useLocalState} from "../Utilities/useLocalState.js";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCircleUser, faHeart} from "@fortawesome/free-solid-svg-icons";
+import Cookies from "js-cookie";
 
 function Header() {
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [jwt, setJwt] = useLocalState("", "jwt");
 
-    // const { openCart, cartQuantity } = useShoppingCart()
-    const {cartQuantity, setCartQuantity} = useState(0)
+    useEffect(() => {
+        if (jwt) {
+            // Decode JWT
+            const decoded = jwtDecode(jwt);
 
+            // Check if JWT is expired
+            const currentTime = Date.now() / 1000;
+            if (decoded.exp < currentTime) {
+                // JWT expired, user is not logged in
+                setLoggedIn(false);
+            } else {
+                // JWT valid, user is logged in
+                setLoggedIn(true);
+            }
+        } else {
+            Cookies.remove('order');
+            // No JWT found, user is not logged in
+            setLoggedIn(false);
+        }
+    }, []);
 
     return (
         <>
-            <Navbar expand="lg" className="bg-body-tertiary mb-4 py-3" sticky={"top"}>
+            <Navbar expand="lg" className="shadow-sm bg-white mb-4 py-3" fixed={"top"}>
                 <Container>
                     <Navbar.Brand href="/">
                         <img
-                            src="/src/assets/react.svg"
-                            width="30"
-                            height="30"
+                            src="/src/assets/Logo.png"
                             className="d-inline-block align-top me-1"
                             alt="React Bootstrap logo"
+                            height={"36px"}
                         />
-                        Web Marketplace
                     </Navbar.Brand>
+                    {
+                        loggedIn ? (
+                            <div>
 
-                    <div>
-                        <Link to={"/favourite-products"} className={"me-4"}><FontAwesomeIcon icon={faHeart}
-                                                                                             size={"xl"}/></Link>
-                        <Link to={"/login"} className={"me-4"}>Login</Link>
-                        <Link to={"/register"} className={"me-4"}>Register</Link>
-                        <Link to={"/accountSettings"} className={"me-4"}>Account Settings</Link>
-                    </div>
+                                <Link to={"/favourite-products"}
+                                      className={" text-decoration-none text-danger me-4"}><FontAwesomeIcon
+                                    icon={faHeart}
+                                    size={"2xl"}/></Link>
+                                <Link to={"/accountSettings"}
+                                      className={"text-decoration-none btn btn-outline-dark rounded-pill"}>
+                                    <span className={"me-2"}>Account </span><FontAwesomeIcon icon={faCircleUser}
+                                                                                             size={"2xl"}/>
+                                </Link>
+                            </div>
+                        ) : (
+                            <div>
+
+                                <span className={"text-dark"}>
+                            <Link to={"/login"} className={"me-4 text-decoration-none text-dark"}>Login</Link>
+                        <Link to={"/register"} className={"me-4 text-decoration-none text-dark"}>Register</Link>
+                        </span>
+                                {/*<Link to={"/accountSettings"} className={"me-4"}>Account Settings</Link>*/}
+                            </div>
+                        )
+                    }
+
                 </Container>
             </Navbar>
         </>

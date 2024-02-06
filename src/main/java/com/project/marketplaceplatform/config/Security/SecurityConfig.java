@@ -44,7 +44,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/products/addProduct").permitAll()
+                                .requestMatchers("/products/viewProducts").permitAll()
+                                .requestMatchers("products/{productId}").permitAll()
+                                .requestMatchers("products/{productId}/viewReviews").permitAll()
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .requestMatchers("/static/**").permitAll()
                                 .anyRequest().authenticated()

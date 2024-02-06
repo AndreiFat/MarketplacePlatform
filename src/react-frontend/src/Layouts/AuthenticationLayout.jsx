@@ -8,11 +8,11 @@ function AuthenticationLayout() {
         <>
             <Container fluid className={"p-0"}>
                 <Header/>
-                <p className={"text-center"}>Aici este layoutul pentru autentificare</p>
-                <Container>
+                <Container className={"mt-5"}>
                     <Outlet/>
                 </Container>
-                <Footer/>
+                <div className={"fixed-bottom"}><Footer/></div>
+
             </Container>
         </>
     )

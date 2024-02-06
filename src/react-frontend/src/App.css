@@ -1,3 +1,10 @@
+body {
+    /*font-family: 'Nunito', sans-serif;*/
+    font-family: 'Poppins', sans-serif !important;
+    padding-top: 3em;
+    background-color: #f2f8fa !important;
+}
+
 .floating-element {
     position: fixed;
     bottom: 0;
@@ -50,4 +57,18 @@
 
 .radio-button input {
     display: none;
+}
+
+.p-0-5 {
+    padding-bottom: 2px;
+    padding-top: 2px;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
 }

@@ -1,7 +1,7 @@
 import {useLocalState} from "../../Utilities/useLocalState.js";
 import {useEffect, useState} from "react";
 import Button from "react-bootstrap/Button";
-import {Col, Modal} from "react-bootstrap";
+import {Breadcrumb, Card, Col, Modal, Row} from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 
 function ManageAddresses() {
@@ -128,33 +128,58 @@ function ManageAddresses() {
 
     return (
         <>
-            <Button variant="primary" onClick={handleShow}>
-                Add a new address
-            </Button>
-            {
-                addresses ? (
-                    addresses.map((address) => (
-                        <div key={address.id}>
-                            <span>{address.id} | </span>
-                            <span>{address.address} | </span>
-                            <span>{address.region} | </span>
-                            <span>{address.country} | </span>
-                            <span>
-                                <Button variant="warning"
-                                        onClick={() => handleShowEdit(address.id, address.address, address.region, address.country)}>
-                                 Edit
-                                </Button>
+            <Breadcrumb className={"mt-5"}>
+                <Breadcrumb.Item href="/" className={"text-decoration-none"}>Store</Breadcrumb.Item>
+                <Breadcrumb.Item href="/accountSettings" className={"text-decoration-none"}>Account
+                    Settings</Breadcrumb.Item>
+                <Breadcrumb.Item active>Addresses</Breadcrumb.Item>
+            </Breadcrumb>
+            <Row className={"mb-3"}>
+                <Col md={6}>
+                    <h3>Addresses</h3>
+                </Col>
+                <Col className={"d-flex justify-content-end"} md={6}>
+                    <Button variant="primary" onClick={handleShow}>
+                        Add a new address
+                    </Button>
+                </Col>
+            </Row>
+
+
+            <Row>
+                {
+                    addresses ? (
+                        addresses.map((address) => (
+
+                            <Col md={4} key={address.id}>
+                                <Card className={"p-2 rounded-4 border-0 shadow-sm"}>
+                                    <Card.Body>
+                                        <h5>{address.address}</h5>
+                                        <h6 className={"text-muted"}>{address.region}, {address.country} </h6>
+                                        <Row>
+                                            <Col md={6}>
+                                                <Button variant="warning" className={"w-100"}
+                                                        onClick={() => handleShowEdit(address.id, address.address, address.region, address.country)}>
+                                                    Edit
+                                                </Button>
+                                            </Col>
+                                            <Col md={6}>
+                                                <Button variant="danger" className={"w-100"}
+                                                        onClick={() => handleDelete(address.id)}>
+                                                    Delete
+                                                </Button>
+                                            </Col>
+                                        </Row>
+                                        <span>
+
                             </span>
-                            <span>
-                                <Button variant="danger"
-                                        onClick={() => handleDelete(address.id)}>
-                                 Delete
-                                </Button>
-                            </span>
-                        </div>
-                    ))
-                ) : (<></>)
-            }
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        ))
+                    ) : (<></>)
+                }
+            </Row>
 
             {
                 addresses ? (
@@ -213,7 +238,6 @@ function ManageAddresses() {
                     ))
                 ) : (<></>)
             }
-
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>

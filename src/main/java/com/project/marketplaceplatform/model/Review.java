@@ -18,6 +18,8 @@ public class Review {
 
     @ManyToOne(optional = false)
     private User userId;
+    @Lob
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String description;
     private int numberOfStars;
 }

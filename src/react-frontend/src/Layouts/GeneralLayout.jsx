@@ -6,7 +6,7 @@ import Footer from "../components/Footer.jsx";
 function GeneralLayout() {
     return (
         <>
-            <Container fluid className={"p-0"}>
+            <Container fluid className={"p-0 mt-5"}>
                 <Header/>
                 <Container>
                     <Outlet/>

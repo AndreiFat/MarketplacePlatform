@@ -2,9 +2,13 @@ import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faHeart} from "@fortawesome/free-solid-svg-icons";
+import {faBoxesStacked, faHeart} from "@fortawesome/free-solid-svg-icons";
 import {useLocalState} from "../../Utilities/useLocalState.js";
 import {jwtDecode} from "jwt-decode";
+import PrivateRoute from "../../Utilities/PrivateRoute.jsx";
+import {Card, Col, Row} from "react-bootstrap";
+import StarRating from "../../components/StarRating.jsx";
+
 
 function FavouriteProducts() {
     const navigate = useNavigate();
@@ -54,6 +58,7 @@ function FavouriteProducts() {
                 });
                 const productsDetails = await productsFetch.json();
                 setProducts(productsDetails)
+                console.log("set")
                 console.log(productsDetails)
             } catch (error) {
                 console.error('Error:', error);
@@ -66,13 +71,13 @@ function FavouriteProducts() {
     function saveAsFavourite(product) {
         const favouriteProduct = {
             productId: {
-                id: product.productId.id
+                id: product.id
             },
             userId: {
-                id: user
+                id: user.id
             }
         }
-        console.log(`Saving as favourite ${product.productId.id}`)
+        console.log(`Saving as favourite ${product.id}`)
         fetch(`http://localhost:8080/favoriteProducts/toggleProduct`, {
             headers: {
                 "Content-Type": "application/json",
@@ -88,31 +93,75 @@ function FavouriteProducts() {
                 } else {
                     console.log("Failed to save!")
                 }
-            })
-            .catch((error) => {
-                console.error('Error saving product:', error);
-            });
+            }).then((data) => {
+            console.log(data)
+        }).catch((error) => {
+            console.error('Error saving product:', error);
+        });
     }
 
     return (
         <>
-            {
-                products ? (
-                        products.map((product) => (
-                            <div key={product.id}>
-                                <Link to={`${product.id}`}><span>{product.id}</span></Link>
-                                <span>{product.name}</span>
-                                <span>{product.price}</span>
-                                <span><Button variant="warning"><Link
-                                    to={`/editProducts/${product.id}`}>Edit</Link></Button></span>
-                                <span><Button variant="primary"
-                                              onClick={() => saveAsFavourite(product)}><FontAwesomeIcon icon={faHeart}
-                                                                                                        size={"xl"}/></Button></span>
-                            </div>
-                        )))
-                    : (<></>)}
+            <Row>
+                {
+                    products ? (
+                            products.map((product) => (
+                                <Col md={3} key={product.id}>
+                                    <Card className={"mb-4 p-2 shadow-sm border-0 rounded-4"}>
+                                        {product.productId.images[0] ? (
+                                            <Card.Img variant="top" height={"200px"}
+                                                      className={"p-2 rounded-4"}
+                                                      style={{objectFit: "cover", width: "100%"}}
+                                                      src={`data:image/jpeg;base64,${product.productId.images[0].imageData}`}
+                                                      alt={product.productId.images[0].name}/>) : <></>
+                                        }
+                                        <Card.Body>
+                                            <Link to={`${product.productId.id}`}
+                                                  className={"text-decoration-none text-dark"}>
+                                                <h4>{product.productId.name}</h4>
+                                                <h5 className={"text-secondary"}><b>{product.productId.price} Ron</b></h5>
+                                            </Link>
+                                            <Row>
+                                                <Col md={9}><StarRating
+                                                    rating={product.productId.rating}></StarRating>
+                                                    <div id="product-stock" className={"py-1"}>
+                                                        {
+                                                            product.productId.stock > 0 ? (
+                                                                <p className={"text-success m-0"}><FontAwesomeIcon
+                                                                    icon={faBoxesStacked}
+                                                                    className={"me-1"}/> Available
+                                                                    on
+                                                                    stock</p>
+                                                            ) : (<p className={"text-danger m-0"}><FontAwesomeIcon
+                                                                icon={faBoxesStacked}
+                                                                className={"me-1"}/> Out of
+                                                                stock
+                                                            </p>)
+                                                        }
+                                                    </div>
+                                                </Col> <Col md={3}>
+                                                 <span><Button variant="danger"
+                                                               className={"border-2 py-2 rounded-4"}
+                                                               onClick={() => saveAsFavourite(product.productId)}>
+                                                 <FontAwesomeIcon
+                                                     className={"p-0-5"}
+                                                     icon={faHeart}
+                                                     size={"xl"}/></Button></span>
+                                            </Col>
+                                            </Row>
+                                            <div className={"d-flex justify-content-center w-100"}>
+                                                <div className="d-flex align-items-center">
+
+                                                </div>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            )))
+                        : (<></>)}
+            </Row>
         </>
     )
 }
 
-export default FavouriteProducts
+export default PrivateRoute(FavouriteProducts)

@@ -2,7 +2,7 @@ import AdminRoute from "../../Utilities/AdminRoute.jsx";
 import {useState} from "react";
 import {useLocalState} from "../../Utilities/useLocalState.js";
 import Button from "react-bootstrap/Button";
-import {Form, Modal} from "react-bootstrap";
+import {Card, Col, Form, Modal, Row} from "react-bootstrap";
 
 function ViewDiscountCoupons() {
     const [discountCoupons, setDiscountCoupons] = useState(null);
@@ -170,29 +170,42 @@ function ViewDiscountCoupons() {
 
     return (
         <>
-            <Button variant="primary" onClick={handleShow}>
-                Add new category
-            </Button>
-            {
-                discountCoupons ? (
-                        discountCoupons.map((discountCoupon) => (
-                            <div key={discountCoupon.id}>
-                                <span>Id: {discountCoupon.id}</span>
-                                <span>Code: {discountCoupon.code}</span>
-                                <span>Value: {discountCoupon.discount}</span>
-                                <span>Category: {discountCoupon.categoryId.name}</span>
-                                <Button variant="warning" data-id={discountCoupon.id}
-                                        onClick={() => handleShowForEdit(discountCoupon.id, discountCoupon.code, discountCoupon.discount, discountCoupon.categoryId.id)}>Edit
-                                    category</Button>
-                                <Button variant="danger" data-id={discountCoupon.id}
-                                        onClick={() => deleteDiscountCoupon(discountCoupon.id)}>Delete
-                                    category</Button>
-                            </div>
+            <Row className={"py-3"}>
+                <Col md={"6"}>
+                    <h3>Discount Coupons</h3>
+                </Col>
+                <Col className={"d-flex justify-content-end"} md={"6"}>
+                    <Button variant="primary" onClick={handleShow}>
+                        Add new category
+                    </Button>
+                </Col>
+            </Row>
+            <Row className={"mt-3"}>
+                {
+                    (discountCoupons && discountCoupons.length !== 0) ? (
+                            discountCoupons.map((discountCoupon) => (
+                                <Col md={3} key={discountCoupon.id}>
+                                    <Card className={" rounded-4"}>
+                                        <Card.Body className={"p-4"}>
+                                            <div className="mb-3">
+                                                <span><h2>{discountCoupon.code}</h2></span>
+                                                <span><h5>Value: {discountCoupon.discount}</h5></span>
+                                                <span><h5>Category: {discountCoupon.categoryId.name}</h5></span>
+                                            </div>
+                                            <Button className={"me-3"} variant="warning" data-id={discountCoupon.id}
+                                                    onClick={() => handleShowForEdit(discountCoupon.id, discountCoupon.code, discountCoupon.discount, discountCoupon.categoryId.id)}>Edit
+                                            </Button>
+                                            <Button variant="danger" data-id={discountCoupon.id}
+                                                    onClick={() => deleteDiscountCoupon(discountCoupon.id)}>Delete
+                                            </Button>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
 
-                        )))
-                    : (<></>)
-            }
-
+                            )))
+                        : (<><h6 className={"my-3"}>No coupon code created yet!</h6></>)
+                }
+            </Row>
             {
                 discountCoupons ? (
                         discountCoupons.map((discountCoupon) => (

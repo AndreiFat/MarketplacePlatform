@@ -9,11 +9,12 @@ function ProductAccordion({review, verifyOwnerOfReview, handleShowForEdit, delet
             <Accordion.Item eventKey={review.id}>
                 <Accordion.Header>
                     <Row className={"w-100"}>
-                        <Col md={8}>
-                            <span><h5 className={"mb-0"}>{review.userId.name} {review.userId.surname}</h5></span>
+                        <Col md={8} className={"d-flex"}>
+                            <span className={"my-auto"}><h5
+                                className={"mb-0"}>{review.userId.name} {review.userId.surname}</h5></span>
                         </Col>
                         <Col className={"d-flex justify-content-end"} md={4}>
-                            <h5 className={"me-3"}>
+                            <h5 className={"me-3 my-auto"}>
                                 <StarRating
                                     rating={review.numberOfStars.toString()}></StarRating>
                             </h5></Col>

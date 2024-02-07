@@ -88,6 +88,14 @@ function AccountSettings() {
         setValidated(true);
     };
 
+    const handleLogout = () => {
+        // Remove JWT token from local storage
+        localStorage.removeItem('jwt');
+
+        // Redirect the user to the login page
+        window.location.href = '/login'; // Redirect to your login page
+    };
+
     return (
         <>
             <Breadcrumb className={"mt-5"}>
@@ -96,7 +104,7 @@ function AccountSettings() {
             </Breadcrumb>
             <Row className={"justify-content-center pb-5"}>
                 <h3 className={"text-center mb-4"}>Account Settings</h3>
-                <Col md={5}>
+                <Col md={4}>
                     <Card className={"p-2 rounded-4 border-0 shadow-sm"}>
                         <Card.Body>
                             <h3>User details</h3>
@@ -233,8 +241,7 @@ function AccountSettings() {
                     </Card>
                 </Col>
                 <Col md={4}>
-                    <Card className={"p-2 rounded-4 border-0 shadow-sm"}>
-
+                    <Card className={"p-2 rounded-4 border-0 shadow-sm mb-4"}>
                         <Card.Body>
                             <h3 className={"text-start mb-3"}>Manage Addresses</h3>
                             <Button variant={"dark"} className={"py-3 px-4 text-center rounded-4"}>
@@ -242,10 +249,24 @@ function AccountSettings() {
                                     Addresses</Link></Button>
                         </Card.Body>
                     </Card>
+                    <Card className={"p-2 rounded-4 border-0 mb-4 shadow-sm"}>
+                        <Card.Body>
+                            <h3 className={"text-start mb-3"}>Manage Orders</h3>
+                            <Button variant={"dark"} className={"py-3 px-4 text-center rounded-4"}>
+                                <Link to={"/user/ManageOrders"}
+                                      className={"text-decoration-none text-white"}>Orders</Link></Button>
+                        </Card.Body>
+                    </Card>
+                    <Card className={"p-2 rounded-4 border-0 shadow-sm"}>
+                        <Card.Body>
+                            <h3 className={"text-start mb-3"}>Logout</h3>
+                            <Button onClick={handleLogout} variant={"dark"}
+                                    className={"py-3 px-4 text-center rounded-4"}>Logout
+                            </Button>
+                        </Card.Body>
+                    </Card>
                 </Col>
             </Row>
-
-
         </>
     )
 }

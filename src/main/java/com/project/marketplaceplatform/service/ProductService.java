@@ -6,6 +6,7 @@ import com.project.marketplaceplatform.model.Review;
 import com.project.marketplaceplatform.repository.ImageRepository;
 import com.project.marketplaceplatform.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -75,6 +76,7 @@ public class ProductService {
         return ResponseEntity.ok().build();
     }
 
+    @Transactional
     public void deleteById(Long productId) {
         productRepository.deleteById(productId);
     }

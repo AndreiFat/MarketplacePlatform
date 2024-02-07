@@ -3,6 +3,8 @@ import {Link, useParams} from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {useLocalState} from "../../Utilities/useLocalState.js";
+import AdminRoute from "../../Utilities/AdminRoute.jsx";
+import {Card, Col, Row} from "react-bootstrap";
 
 function EditProductPage() {
     //fetch pentru produsul respectiv
@@ -106,78 +108,80 @@ function EditProductPage() {
 
     return (
         <>
-            <p>saloot de la edit</p>
+            <Row className={"justify-content-center pt-4"}>
+                <Col md={7}>
+                    <Card className={"p-4"}>
+                        <Form>
+                            <Form.Group className="mb-3" controlId="exampleForm.name">
+                                <Form.Label>Product name</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Barbie Doll"
+                                    value={name}
+                                    onChange={(e) => setProduct({...product, name: e.target.value})}
+                                />
+                            </Form.Group>
 
-            <Form>
-                <Form.Group className="mb-3" controlId="exampleForm.name">
-                    <Form.Label>Product name</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="Barbie Doll"
-                        value={name}
-                        onChange={(e) => setProduct({...product, name: e.target.value})}
-                    />
-                </Form.Group>
+                            <Form.Group className="mb-3" controlId="exampleForm.description">
+                                <Form.Label>Product description</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Limited edition Barbie Doll."
+                                    value={description}
+                                    onChange={(e) => setProduct({...product, description: e.target.value})}
+                                />
+                            </Form.Group>
 
-                <Form.Group className="mb-3" controlId="exampleForm.description">
-                    <Form.Label>Product description</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="Limited edition Barbie Doll."
-                        value={description}
-                        onChange={(e) => setProduct({...product, description: e.target.value})}
-                    />
-                </Form.Group>
+                            <Form.Group className="mb-3" controlId="exampleForm.price">
+                                <Form.Label>Product price</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    placeholder="13.38 $"
+                                    value={price}
+                                    onChange={(e) => setProduct({...product, price: e.target.value})}
+                                />
+                            </Form.Group>
 
-                <Form.Group className="mb-3" controlId="exampleForm.price">
-                    <Form.Label>Product price</Form.Label>
-                    <Form.Control
-                        type="number"
-                        placeholder="13.38 $"
-                        value={price}
-                        onChange={(e) => setProduct({...product, price: e.target.value})}
-                    />
-                </Form.Group>
+                            <Form.Group className="mb-3" name="categoryIdEdit"
+                                        controlId="exampleForm.categoryIdEdit">
+                                <Form.Label>Category</Form.Label>
+                                <select name="categoryIdEdit" value={categoryIdEdit}
+                                        onChange={(e) => setCategoryIdEdit(e.target.value)}>
+                                    <option value="">Select option</option>
+                                    {categories !== null && categories.map(category => (
+                                        <option key={category.id} value={category.id}
+                                                data-array={categories.indexOf(category)}>
+                                            {category.name}
+                                        </option>
+                                    ))}
 
-                <Form.Group className="mb-3" name="categoryIdEdit"
-                            controlId="exampleForm.categoryIdEdit">
-                    <Form.Label>Category</Form.Label>
-                    <select name="categoryIdEdit" value={categoryIdEdit}
-                            onChange={(e) => setCategoryIdEdit(e.target.value)}>
-                        <option value="">Select option</option>
-                        {categories !== null && categories.map(category => (
-                            <option key={category.id} value={category.id}
-                                    data-array={categories.indexOf(category)}>
-                                {category.name}
-                            </option>
-                        ))}
+                                </select>
+                            </Form.Group>
 
-                    </select>
-                </Form.Group>
+                            <Form.Group className="mb-3" controlId="exampleForm.stock">
+                                <Form.Label>Stock</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    placeholder="100"
+                                    value={stock}
+                                    onChange={(e) => setProduct({...product, stock: e.target.value})}
+                                />
+                            </Form.Group>
 
-                <Form.Group className="mb-3" controlId="exampleForm.stock">
-                    <Form.Label>Stock</Form.Label>
-                    <Form.Control
-                        type="number"
-                        placeholder="100"
-                        value={stock}
-                        onChange={(e) => setProduct({...product, stock: e.target.value})}
-                    />
-                </Form.Group>
-
-                <Form.Group>
-                    <Button color="primary" type="submit" onClick={handleSubmit}>
-                        Update product
-                    </Button>
-                    <Button color="danger">
-                        <Link to={'/'}>Cancel</Link>
-                    </Button>
-                </Form.Group>
-            </Form>
-
-
+                            <Form.Group>
+                                <Button className={"me-3"} color="primary" type="submit" onClick={handleSubmit}>
+                                    Update product
+                                </Button>
+                                <Button variant="danger">
+                                    <Link className={"text-decoration-none text-white"} to={'/'}>Cancel</Link>
+                                </Button>
+                            </Form.Group>
+                        </Form>
+                    </Card>
+                </Col>
+            </Row>
         </>
     )
 }
 
-export default EditProductPage
+export default AdminRoute(EditProductPage)

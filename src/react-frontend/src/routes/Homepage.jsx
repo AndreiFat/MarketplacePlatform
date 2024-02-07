@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Button from 'react-bootstrap/Button';
-import {faCartShopping} from "@fortawesome/free-solid-svg-icons";
+import {faCartShopping, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useLocalState} from "../Utilities/useLocalState.js";
-import {Col, Offcanvas, Row, Toast} from "react-bootstrap";
+import {Card, Col, Offcanvas, Row, Toast} from "react-bootstrap";
 import Cookies from 'js-cookie';
 import Form from "react-bootstrap/Form";
 import Product from "../components/Product.jsx";
@@ -97,35 +97,11 @@ function Homepage() {
         fetchData();
     }, []);
 
-    function deleteProduct(productId) {
-        fetch(`http://localhost:8080/products/deleteProduct/${productId}`, {
-            method: 'DELETE',
-            headers: {
-                Authorization: `Bearer ${jwt}`,
-            }
-        })
-            .then((response) => {
-                if (response.status === 200) {
-                    window.location.reload()
-                } else {
-                    console.log("Failed to delete!")
-                }
-            })
-            .catch((error) => {
-                console.error('Error deleting product:', error);
-            });
-    }
-
     function saveAsFavourite(productId) {
         const favouriteProduct = {
-            productId: {
-                id: productId
-            },
-
-            userId: {
-                id: 1
-            }
+            product: productId
         }
+        console.log(favouriteProduct)
         console.log(`Saving as favourite din homepage ${productId}`)
         fetch(`http://localhost:8080/favoriteProducts/toggleProduct`, {
             headers: {
@@ -138,10 +114,13 @@ function Homepage() {
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.status)
+                    return response.json()
                 } else {
                     console.log("Failed to save!")
                 }
-            })
+            }).then((data) => {
+            console.log(data)
+        })
             .catch((error) => {
                 console.error('Error saving product:', error);
             });
@@ -368,7 +347,7 @@ function Homepage() {
             <Row>
                 {products ? (
                     products.map((product) => (
-                        <Product key={product.id} product={product} deleteProduct={deleteProduct} addToCart={addToCart}
+                        <Product key={product.id} product={product} addToCart={addToCart}
                                  saveAsFavourite={saveAsFavourite}></Product>
 
                     ))) : (<></>)}
@@ -410,15 +389,35 @@ function Homepage() {
                             loggedIn ? (
                                 <div>
                                     <h3>Products in Cart:</h3>
-                                    <ul>
-                                        {productsInOrder.map(product => (
-                                            <li key={product.id}>
-                                                {product.name} - Quantity: {product.quantity}
-                                                <Button className={"btn btn-primary"}
-                                                        onClick={() => removeItemFromCart(product.id)}>Delete</Button>
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    {productsInOrder.map(product => (
+
+                                        <Card key={product.id} className={"my-3 rounded-4"}>
+                                            <Card.Body className={"p-4"}>
+                                                <Row>
+                                                    <Col md={8}>
+                                                        <div className={""}>
+                                                            <h5>{product.name}</h5>
+                                                            <span
+                                                                className={"fs-6 me-3"}><b>Quantity</b>: {product.quantity}</span>
+                                                        </div>
+                                                    </Col>
+                                                    <Col md={4} className={"d-flex"}>
+                                                         <span className={"my-auto"}>
+                                                            <Button
+                                                                className={"ms-5 btn btn-danger rounded-pill py-2"}
+                                                                onClick={() => removeItemFromCart(product.id)}><FontAwesomeIcon
+                                                                icon={faTrash} size={"lg"}/></Button>
+                                                        </span>
+
+                                                    </Col>
+                                                </Row>
+
+
+                                            </Card.Body>
+                                        </Card>
+
+                                    ))}
+
                                     <div className="offcanvas-footer d-block">
                                         <Form>
                                             <h3><b>Price</b> : {order.price} RON</h3>
@@ -428,10 +427,10 @@ function Homepage() {
                                                     <h5><b>Total Price</b> : {priceAfterDiscount()} RON</h5>
                                                 </div>
                                             ) : (<></>)}
-                                            <Form.Group className="mb-3" name="couponId"
+                                            <Form.Group className="my-3" name="couponId"
 
                                                         controlId="exampleForm.couponId">
-                                                <Form.Label>Discount Coupons</Form.Label>
+                                                <Form.Label className={"me-3"}>Discount Coupons</Form.Label>
                                                 <select name="couponId"
                                                         value={couponId}
                                                         onChange={(e) => setCouponId(e.target.value)}
@@ -450,7 +449,7 @@ function Homepage() {
                                             <Form.Group className="mb-3" name="addressId"
 
                                                         controlId="exampleForm.addressId">
-                                                <Form.Label>Address</Form.Label>
+                                                <Form.Label className={"me-3"}>Address</Form.Label>
                                                 <select name="addressId"
                                                         value={addressId}
                                                         onChange={(e) => setAddressId(e.target.value)}

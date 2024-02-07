@@ -1,7 +1,6 @@
 package com.project.marketplaceplatform.repository;
 
 import com.project.marketplaceplatform.model.FavoriteProduct;
-import com.project.marketplaceplatform.model.Product;
 import com.project.marketplaceplatform.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,5 +10,5 @@ public interface FavoriteProductsRepository extends JpaRepository<FavoriteProduc
 
     List<FavoriteProduct> findFavoriteProductsByUserId(User userId);
 
-    FavoriteProduct findByUserIdAndProductId(User userId, Product productId);
+    FavoriteProduct findByUserIdAndProductId(User userId, Long product_id);
 }

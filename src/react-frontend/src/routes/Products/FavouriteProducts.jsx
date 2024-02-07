@@ -49,7 +49,7 @@ function FavouriteProducts() {
                 }
 
                 // Second fetch using data from the first fetch
-                const productsFetch = await fetch(`http://localhost:8080/favoriteProducts/viewFavoriteProducts/${userDetails.id}`, {
+                const productsFetch = await fetch(`http://localhost:8080/favoriteProducts/viewFavoriteProducts/`, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${jwt}`
@@ -68,16 +68,11 @@ function FavouriteProducts() {
         fetchData();
     }, [])
 
-    function saveAsFavourite(product) {
+    function saveAsFavourite(productId) {
         const favouriteProduct = {
-            productId: {
-                id: product.id
-            },
-            userId: {
-                id: user.id
-            }
+            product: productId
         }
-        console.log(`Saving as favourite ${product.id}`)
+        console.log(`Saving as favourite ${productId}`)
         fetch(`http://localhost:8080/favoriteProducts/toggleProduct`, {
             headers: {
                 "Content-Type": "application/json",
@@ -104,29 +99,30 @@ function FavouriteProducts() {
         <>
             <Row>
                 {
-                    products ? (
+
+                    (products && products.length !== 0) ? (
                             products.map((product) => (
                                 <Col md={3} key={product.id}>
                                     <Card className={"mb-4 p-2 shadow-sm border-0 rounded-4"}>
-                                        {product.productId.images[0] ? (
+                                        {product.images[0] ? (
                                             <Card.Img variant="top" height={"200px"}
                                                       className={"p-2 rounded-4"}
                                                       style={{objectFit: "cover", width: "100%"}}
-                                                      src={`data:image/jpeg;base64,${product.productId.images[0].imageData}`}
-                                                      alt={product.productId.images[0].name}/>) : <></>
+                                                      src={`data:image/jpeg;base64,${product.images[0].imageData}`}
+                                                      alt={product.images[0].name}/>) : <></>
                                         }
                                         <Card.Body>
-                                            <Link to={`${product.productId.id}`}
+                                            <Link to={`${product.id}`}
                                                   className={"text-decoration-none text-dark"}>
-                                                <h4>{product.productId.name}</h4>
-                                                <h5 className={"text-secondary"}><b>{product.productId.price} Ron</b></h5>
+                                                <h4>{product.name}</h4>
+                                                <h5 className={"text-secondary"}><b>{product.price} Ron</b></h5>
                                             </Link>
                                             <Row>
                                                 <Col md={9}><StarRating
-                                                    rating={product.productId.rating}></StarRating>
+                                                    rating={product.rating}></StarRating>
                                                     <div id="product-stock" className={"py-1"}>
                                                         {
-                                                            product.productId.stock > 0 ? (
+                                                            product.stock > 0 ? (
                                                                 <p className={"text-success m-0"}><FontAwesomeIcon
                                                                     icon={faBoxesStacked}
                                                                     className={"me-1"}/> Available
@@ -142,7 +138,7 @@ function FavouriteProducts() {
                                                 </Col> <Col md={3}>
                                                  <span><Button variant="danger"
                                                                className={"border-2 py-2 rounded-4"}
-                                                               onClick={() => saveAsFavourite(product.productId)}>
+                                                               onClick={() => saveAsFavourite(product.id)}>
                                                  <FontAwesomeIcon
                                                      className={"p-0-5"}
                                                      icon={faHeart}
@@ -158,7 +154,8 @@ function FavouriteProducts() {
                                     </Card>
                                 </Col>
                             )))
-                        : (<></>)}
+                        : (<Col><h3 className={"my-3"}>You have not saved any products yet!</h3></Col>)
+                }
             </Row>
         </>
     )

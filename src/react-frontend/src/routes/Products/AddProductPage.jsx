@@ -1,8 +1,9 @@
 import Form from 'react-bootstrap/Form';
 import {useEffect, useState} from "react";
 import Button from "react-bootstrap/Button";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useLocalState} from "../../Utilities/useLocalState.js";
+import AdminRoute from "../../Utilities/AdminRoute.jsx";
 
 function AddProductPage() {
     const [jwt, setJwt] = useLocalState("", "jwt");
@@ -19,6 +20,8 @@ function AddProductPage() {
     const [images, setImages] = useState([]);
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [product, setProduct] = useState(null);
+
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -102,11 +105,13 @@ function AddProductPage() {
             }
         }
         sendData()
+        navigate("/admin")
     }
 
 
     return (
         <>
+            <h3 className={"my-3"}>Add products</h3>
             <Form encType="multipart/form-data">
                 <Form.Group className="mb-3" name="name" value={name} onChange={(e) => setName(e.target.value)}
                             controlId="exampleForm.name">
@@ -161,9 +166,10 @@ function AddProductPage() {
                     </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group>
+                <Form.Group className={"mt-4"}>
                     <Button color="primary" type="submit" onClick={handleSubmit}>Add product</Button>
-                    <Button variant="danger"><Link to={'/'}>Cancel</Link></Button>
+                    <Button className={"ms-3"} variant="danger"><Link className={"text-decoration-none text-white"}
+                                                                      to={'/'}>Cancel</Link></Button>
                 </Form.Group>
 
             </Form>
@@ -171,4 +177,4 @@ function AddProductPage() {
     )
 }
 
-export default AddProductPage
+export default AdminRoute(AddProductPage)

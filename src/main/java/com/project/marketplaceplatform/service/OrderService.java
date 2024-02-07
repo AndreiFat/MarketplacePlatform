@@ -150,4 +150,16 @@ public class OrderService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(entityNotFoundException.getMessage());
         }
     }
+
+    public List<Order> getAll() {
+        return orderRepository.findAll();
+    }
+
+    public ResponseEntity<Order> updateOrderStatus(Long orderId, Order order) {
+        orderRepository.findById(orderId).ifPresent((foundOrder -> {
+            foundOrder.setStatus(order.getStatus());
+            orderRepository.save(foundOrder);
+        }));
+        return ResponseEntity.ok().build();
+    }
 }

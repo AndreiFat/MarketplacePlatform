@@ -225,7 +225,8 @@ function ManageAddresses() {
                                         <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                     </Form.Group>
 
-                                    <Button variant="secondary" onClick={() => handleCloseEdit(address.id)}>
+                                    <Button className={"me-3"} variant="secondary"
+                                            onClick={() => handleCloseEdit(address.id)}>
                                         Close
                                     </Button>
                                     <Button variant="primary" type={"button"}
@@ -276,7 +277,7 @@ function ManageAddresses() {
                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                         </Form.Group>
 
-                        <Button variant="secondary" onClick={handleClose}>
+                        <Button className={"me-3"} variant="secondary" onClick={handleClose}>
                             Close
                         </Button>
                         <Button variant="primary" type={"submit"} onClick={handleClose}>

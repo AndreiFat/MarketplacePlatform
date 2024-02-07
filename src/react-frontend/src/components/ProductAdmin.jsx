@@ -1,11 +1,10 @@
 import {Link} from "react-router-dom";
-import Button from "react-bootstrap/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBoxesStacked, faCartShopping, faHeart} from "@fortawesome/free-solid-svg-icons";
+import {faBoxesStacked} from "@fortawesome/free-solid-svg-icons";
 import {Card, Col} from "react-bootstrap";
-import StarRating from "./StarRating.jsx";
+import Button from "react-bootstrap/Button";
 
-function Product({product, saveAsFavourite, addToCart}) {
+function ProductAdmin({product, deleteProduct}) {
     return (
         <>
             <Col className={""} xl={3} md={4} sm={6}>
@@ -23,8 +22,6 @@ function Product({product, saveAsFavourite, addToCart}) {
                             <h4>{product.name}</h4>
                             <h5 className={"text-secondary"}><b>{product.price} Ron</b></h5>
                         </Link>
-                        <StarRating
-                            rating={product.rating}></StarRating>
                         <div id="product-stock" className={"py-1"}>
                             {
                                 product.stock > 0 ? (
@@ -40,24 +37,12 @@ function Product({product, saveAsFavourite, addToCart}) {
                         </div>
                         <div className={"d-flex justify-content-center w-100"}>
                             <div className="d-flex align-items-center">
-                                     <span>
-                                         <Button className={"me-2 py-2 p-0-5 rounded-4"}
-                                                 style={{width: "210px"}}
-                                                 variant={"dark "}
-                                                 onClick={() => addToCart(product.id, product.price)}>
-                                             Add to Cart
-                                         <FontAwesomeIcon
-                                             className={"ms-2 p-0-5"}
-                                             size={"lg"}
-                                             icon={faCartShopping}
-                                         />
-                                         </Button></span>
-                                <span><Button variant="outline-danger" className={"border-2 py-2 rounded-4"}
-                                              onClick={() => saveAsFavourite(product.id)}>
-                                        <FontAwesomeIcon
-                                            className={"p-0-5"}
-                                            icon={faHeart}
-                                            size={"xl"}/></Button></span>
+                                <span className={"me-3"}><Button variant="warning"><Link
+                                    className={"text-decoration-none text-dark"}
+                                    to={`/editProducts/${product.id}`}>Edit</Link></Button></span>
+                                <span><Button variant="danger"
+                                              onClick={() => deleteProduct(product.id)}>Delete</Button></span>
+
                             </div>
                         </div>
                     </Card.Body>
@@ -68,7 +53,7 @@ function Product({product, saveAsFavourite, addToCart}) {
     )
 }
 
-export default Product
+export default ProductAdmin
 
 {/*ALL IMAGES*/
 }
@@ -103,11 +88,3 @@ export default Product
 {/*}*/
 }
 
-{/*<span><Button variant="warning"><Link*/
-}
-{/*    to={`/editProducts/${product.id}`}>Edit</Link></Button></span>*/
-}
-{/*<span><Button variant="danger"*/
-}
-{/*              onClick={() => deleteProduct(product.id)}>Delete</Button></span>*/
-}

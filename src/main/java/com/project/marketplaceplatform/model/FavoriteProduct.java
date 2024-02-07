@@ -1,5 +1,6 @@
 package com.project.marketplaceplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,7 +13,9 @@ public class FavoriteProduct {
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Product productId;
+    @JoinColumn(name = "product_id")
+    @JsonBackReference(value = "favorite-products")
+    private Product product;
 
     @ManyToOne(optional = false)
     private User userId;

@@ -44,7 +44,7 @@ function Register() {
             body: JSON.stringify(user),
         }).then((response) => response.json())
             .then((user) => {
-                console.log(user);
+                window.location.href = "/login"
             });
 
         const form = event.currentTarget;

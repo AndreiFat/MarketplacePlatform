@@ -17,6 +17,11 @@ import ViewCategories from "./routes/Categories/ViewCategories.jsx";
 import ViewDiscountCoupons from "./routes/DiscountCoupons/ViewDiscountCoupons.jsx";
 import AccountSettings from "./routes/User/AccountSettings.jsx";
 import ManageAddresses from "./routes/Addresses/ManageAddresses.jsx";
+import HomepageAdmin from "./Admin/HomepageAdmin.jsx";
+import ManageUsers from "./routes/User/ManageUsers.jsx";
+import ManageOrders from "./Orders/ManageOrders.jsx";
+import Orders from "./routes/User/Orders.jsx";
+import AdminLayout from "./Layouts/AdminLayout.jsx";
 
 const router = createBrowserRouter([
     {
@@ -26,10 +31,6 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <App/>,
-            },
-            {
-                path: "/addingProducts",
-                element: <AddProductPage/>,
             },
             {
                 path: "/editProducts/:productId",
@@ -52,20 +53,16 @@ const router = createBrowserRouter([
                 element: <ShoppingCart/>
             },
             {
-                path: "/manageCategories",
-                element: <ViewCategories/>
-            },
-            {
-                path: "/manageDiscountCoupons",
-                element: <ViewDiscountCoupons/>
-            },
-            {
                 path: "/accountSettings",
                 element: <AccountSettings/>
             },
             {
                 path: "/addresses",
                 element: <ManageAddresses/>
+            },
+            {
+                path: "/user/manageOrders",
+                element: <Orders/>
             },
         ]
     },
@@ -80,6 +77,41 @@ const router = createBrowserRouter([
             {
                 path: "/register",
                 element: <Register/>,
+            },
+        ]
+
+    },
+    {
+        path: "/",
+        element: <AdminLayout/>,
+        children: [
+            {
+                path: "/admin",
+                element: <HomepageAdmin/>,
+            },
+            // {
+            //     path: "/viewProducts",
+            //     element: <HomepageAdmin/>,
+            // },
+            {
+                path: "/admin/manageOrders",
+                element: <ManageOrders/>
+            },
+            {
+                path: "/admin/manageUsers",
+                element: <ManageUsers/>
+            },
+            {
+                path: "/admin/manageCategories",
+                element: <ViewCategories/>
+            },
+            {
+                path: "/admin/manageDiscountCoupons",
+                element: <ViewDiscountCoupons/>
+            },
+            {
+                path: "/addingProducts",
+                element: <AddProductPage/>,
             },
         ]
     }

@@ -3,7 +3,7 @@ import {faStar as solidStar, faStarHalfStroke} from '@fortawesome/free-solid-svg
 import {faStar as regularStar} from '@fortawesome/free-regular-svg-icons';
 
 const StarRating = ({rating}) => {
-    rating = parseFloat(rating.replace('.', ','))
+    rating = rating ? parseFloat(rating.replace('.', ',')) : 0;
     const totalStars = 5;
     const fullStars = Math.floor(rating);
     const remainder = rating - fullStars

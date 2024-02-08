@@ -18,10 +18,8 @@ function ProductAdmin({product, deleteProduct}) {
                                   alt={product.images[0].name}/>) : <></>
                     }
                     <Card.Body>
-                        <Link to={`${product.id}`} className={"text-decoration-none text-dark"}>
-                            <h4>{product.name}</h4>
-                            <h5 className={"text-secondary"}><b>{product.price} Ron</b></h5>
-                        </Link>
+                        <h4>{product.name}</h4>
+                        <h5 className={"text-secondary"}><b>{product.price} Ron</b></h5>
                         <div id="product-stock" className={"py-1"}>
                             {
                                 product.stock > 0 ? (

@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {useLocalState} from "../../Utilities/useLocalState.js";
@@ -19,6 +19,8 @@ function EditProductPage() {
         stock: 0,
         rating: 0,
     });
+
+    const navigate = useNavigate();
     const [categories, setCategories] = useState(null);
 
     const [jwt, setJwt] = useLocalState("", "jwt");
@@ -102,6 +104,7 @@ function EditProductPage() {
         })
             .then((product) => {
                 console.log(product);
+                navigate("/admin");
             });
     }
 

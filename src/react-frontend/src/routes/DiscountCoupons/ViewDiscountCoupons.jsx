@@ -141,7 +141,7 @@ function ViewDiscountCoupons() {
             body: JSON.stringify(discountCouponBody),
         }).then((response) => {
             console.log(response.status)
-            //window.location.reload();
+            window.location.reload();
         });
     }
 
@@ -176,7 +176,7 @@ function ViewDiscountCoupons() {
                 </Col>
                 <Col className={"d-flex justify-content-end"} md={"6"}>
                     <Button variant="primary" onClick={handleShow}>
-                        Add new category
+                        Add new coupon
                     </Button>
                 </Col>
             </Row>
@@ -213,9 +213,9 @@ function ViewDiscountCoupons() {
                                    show={showModals[discountCoupon.id] || false}
                                    onHide={() => handleCloseForEdit(discountCoupon.id)}>
                                 <Modal.Header closeButton>
-                                    <Modal.Title>Modal heading</Modal.Title>
+                                    <Modal.Title>Edit discount coupon</Modal.Title>
                                 </Modal.Header>
-                                <Modal.Body>{discountCoupon.id}
+                                <Modal.Body>
                                     <Form>
                                         <Form.Group className="mb-3" name={`codeEdit${discountCoupon.id}`}
                                                     controlId={`exampleForm.codeEdit${discountCoupon.id}`}>
@@ -269,7 +269,7 @@ function ViewDiscountCoupons() {
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>Add new coupon</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>

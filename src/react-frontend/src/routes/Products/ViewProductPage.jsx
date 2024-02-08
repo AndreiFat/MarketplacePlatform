@@ -329,10 +329,9 @@ function ViewProductPage() {
                                 <Modal key={review.id} show={showModals[review.id] || false}
                                        onHide={() => handleCloseForEdit(review.id)}>
                                     <Modal.Header closeButton>
-                                        <Modal.Title>{review.id}</Modal.Title>
+                                        <Modal.Title>Edit review</Modal.Title>
                                     </Modal.Header>
                                     <Modal.Body>
-                                        {review.id}
                                         <Form>
                                             <Form.Group className="mb-3" controlId="exampleForm.reviewDescription">
                                                 <Form.Label>Review Description</Form.Label>

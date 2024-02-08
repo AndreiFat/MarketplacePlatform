@@ -118,19 +118,19 @@ function ViewCategories() {
 
     return (
         <>
-            <Button variant="primary" onClick={handleShow}>
+            <Button variant="primary" className={"mb-3"} onClick={handleShow}>
                 Add new category
             </Button>
             {
                 categories ? (
                         categories.map((category) => (
-                            <div key={category.id}>
-                                <span>Id: {category.id}</span>
-                                <span>Name: {category.name}</span>
+                            <div key={category.id} className={"mb-3"}>
+                                <span className={"me-3"}>Name: {category.name} </span>
                                 <Button variant="warning" data-id={category.id}
-                                        onClick={() => handleShowForEdit(category.id, category.name)}>Edit category</Button>
-                                <Button variant="danger" data-id={category.id} onClick={() => deleteCategory(category.id)}>Delete
-                                    category</Button>
+                                        onClick={() => handleShowForEdit(category.id, category.name)}
+                                        className={"me-3"}>Edit</Button>
+                                <Button variant="danger" data-id={category.id}
+                                        onClick={() => deleteCategory(category.id)}>Delete</Button>
                             </div>
 
                         )))
@@ -144,9 +144,9 @@ function ViewCategories() {
                                    show={showModals[category.id] || false}
                                    onHide={() => handleCloseForEdit(category.id)}>
                                 <Modal.Header closeButton>
-                                    <Modal.Title>Modal heading</Modal.Title>
+                                    <Modal.Title>Edit category</Modal.Title>
                                 </Modal.Header>
-                                <Modal.Body>{category.id}
+                                <Modal.Body>
                                     <Form>
                                         <Form.Group className="mb-3" name={`nameEdit${category.id}`}
                                                     controlId={`exampleForm.nameEdit${category.id}`}>
@@ -175,7 +175,7 @@ function ViewCategories() {
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>Add new category</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>

@@ -11,7 +11,7 @@ function AuthenticationLayout() {
                 <Container className={"mt-5"}>
                     <Outlet/>
                 </Container>
-                <div className={"fixed-bottom"}><Footer/></div>
+                <div><Footer/></div>
 
             </Container>
         </>

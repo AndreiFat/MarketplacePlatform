@@ -1,6 +1,7 @@
 package com.project.marketplaceplatform.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,6 +21,10 @@ public class Product {
     @Column(columnDefinition = "MEDIUMTEXT")
     private String description;
     private double price;
+    @Column(nullable = true) // This makes priceAfterDiscount nullable
+    private double priceAfterDiscount;
+    @Column(nullable = true) // This makes priceAfterDiscount nullable
+    private int priceDiscount;
     @ManyToOne(optional = false)
     private Category categoryId;
     private int stock;

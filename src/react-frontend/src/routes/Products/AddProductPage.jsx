@@ -16,10 +16,12 @@ function AddProductPage() {
     const [categoryId, setCategoryId] = useState("")
     const [stock, setStock] = useState(0)
     const [rating, setRating] = useState(0)
+    const [priceDiscount, setPriceDiscount] = useState(0)
 
     const [images, setImages] = useState([]);
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [product, setProduct] = useState(null);
+    const [priceAfterDiscount, setPriceAfterDiscount] = useState(0);
 
     const navigate = useNavigate();
 
@@ -47,6 +49,13 @@ function AddProductPage() {
             });
     }, []);
 
+    useEffect(() => {
+        let newPrice = 0;
+        newPrice= price - (priceDiscount * price) / 100;
+        setPriceAfterDiscount(newPrice);
+        console.log(priceAfterDiscount)
+    }, [priceDiscount]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const selectedCategoryIndex = categories !== null ? categories.findIndex(category => category.id === parseInt(categoryId, 10)) : -1;
@@ -62,6 +71,8 @@ function AddProductPage() {
             },
             stock,
             rating,
+            priceDiscount,
+            priceAfterDiscount
         };
 
         const form = new FormData();
@@ -130,6 +141,18 @@ function AddProductPage() {
                             controlId="exampleForm.price">
                     <Form.Label>Product price</Form.Label>
                     <Form.Control type="number"/>
+                </Form.Group>
+
+                <Form.Group className="mb-3" name="priceDiscount" value={priceDiscount} onChange={(e) => setPriceDiscount(e.target.value)}
+                            controlId="exampleForm.priceDiscount">
+                    <Form.Label>Price Discount (if exists)</Form.Label>
+                    <Form.Control type="number"/>
+                </Form.Group>
+
+                <Form.Group className="mb-3" name="priceAfterDiscount" value={priceAfterDiscount} onChange={(e) => setPriceDiscount(e.target.value)}
+                            controlId="exampleForm.priceAfterDiscount">
+                    <Form.Label>Price After Discount Applied</Form.Label>
+                    <Form.Control type="text" value={priceAfterDiscount} aria-label="Disabled input example" disabled readOnly/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" name="categoryId" value={categoryId}

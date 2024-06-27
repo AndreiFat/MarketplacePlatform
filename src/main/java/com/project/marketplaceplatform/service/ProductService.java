@@ -8,6 +8,8 @@ import com.project.marketplaceplatform.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,9 @@ public class ProductService {
 
     @Autowired
     private ImageRepository imageRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
+
 
     public void create(Product product) {
         productRepository.save(product);
@@ -70,6 +75,8 @@ public class ProductService {
             foundProduct.setPrice(product.getPrice());
             foundProduct.setRating(product.getRating());
             foundProduct.setStock(product.getStock());
+            foundProduct.setPriceAfterDiscount(product.getPriceAfterDiscount());
+            foundProduct.setPriceDiscount(product.getPriceDiscount());
 //            foundProduct.setSellerId(product.getSellerId());
             productRepository.save(foundProduct);
         }));
@@ -95,24 +102,10 @@ public class ProductService {
         return totalRating / reviews.size();
     }
 
-//    public ResponseEntity<?> getAllImages(Long productId) throws IOException {
-//        Product product = productRepository.findById(productId).orElse(null);
-//        List<ImageDTO> responseImages = new ArrayList<>();
-//        if (product != null) {
-//            List<Image> images = imageRepository.findByProduct(product);
-////            for (Image image : images) {
-////                Resource resource = new ClassPathResource("static/images/" + image.getImagePath());
-////                byte[] imageBytes = Files.readAllBytes(resource.getFile().toPath());
-////
-////                ImageDTO imageResponse = new ImageDTO();
-////                imageResponse.setName(image.getImagePath()); // Set the name of the image
-//////                imageResponse.setBase64(Base64.getEncoder().encodeToString(imageBytes));
-////
-////                responseImages.add(imageResponse);
-////
-////            }
-//            return ResponseEntity.ok(responseImages);
-//        } else
-//            return ResponseEntity.notFound().build();
-//    }
+    public List<Product> searchProductsByNameAndCategory(String name) {
+        logger.info("Searching for products with name containing '{}'", name);
+        List<Product> products = productRepository.findByNameContainingIgnoreCase(name);
+        logger.info("Found {} products", products.size()); // Log the number of products found
+        return products;
+    }
 }

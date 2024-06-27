@@ -1,15 +1,26 @@
-import {Container, Navbar} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import {Container, FormControl, Navbar} from "react-bootstrap";
+import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import {useLocalState} from "../Utilities/useLocalState.js";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleUser, faHeart} from "@fortawesome/free-solid-svg-icons";
 import Cookies from "js-cookie";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 function Header() {
     const [loggedIn, setLoggedIn] = useState(false);
     const [jwt, setJwt] = useLocalState("", "jwt");
+
+    const [query, setQuery] = useState('');
+    const navigate = useNavigate();
+
+    function handleSearch(e){
+        e.preventDefault();
+        console.log("Form submitted", query);
+        navigate(`/search?query=${query}`);
+    }
 
     useEffect(() => {
         if (jwt) {
@@ -34,16 +45,32 @@ function Header() {
 
     return (
         <>
-            <Navbar expand="lg" className="shadow-sm bg-white mb-4 py-3" fixed={"top"}>
+            <Navbar expand="lg" className="shadow-sm bg-white mb-4" fixed={"top"}>
                 <Container>
                     <Navbar.Brand href="/">
                         <img
                             src="/src/assets/Logo.png"
                             className="d-inline-block align-top me-1"
                             alt="React Bootstrap logo"
-                            height={"36px"}
+                            height={"54px"}
                         />
                     </Navbar.Brand>
+                    <Form className="d-flex" onSubmit={event => handleSearch(event)}>
+                        <FormControl
+                            id="searchBar"
+                            name="search"
+                            type="text"
+                            placeholder="Search"
+                            className="me-2"
+                            aria-label="Search"
+                            value={query}
+                            onChange={(e) => {
+                                e.preventDefault()
+                                console.log(e.target.value)
+                                setQuery(e.target.value)}}
+                        />
+                        <Button variant="outline-success" type="submit">Search</Button>
+                    </Form>
                     {
                         loggedIn ? (
                             <div>

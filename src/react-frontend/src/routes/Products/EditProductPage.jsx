@@ -12,6 +12,8 @@ function EditProductPage() {
         name: '',
         description: '',
         price: 0,
+        priceAfterDiscount: 0,
+        priceDiscount: 0,
         categoryId: {
             id: null,
             name: ''
@@ -27,7 +29,19 @@ function EditProductPage() {
 
     const {productId} = useParams();
 
-    const [categoryIdEdit, setCategoryIdEdit] = useState("")
+    const [categoryIdEdit, setCategoryIdEdit] = useState("");
+    const {name, description, price,priceAfterDiscount, priceDiscount, categoryId, stock} = product;
+    const [priceWithDiscount, setPriceWithDiscount]=useState(0)
+
+    useEffect(() => {
+        let newPrice = 0;
+        newPrice= product.price - (product.priceDiscount * product.price) / 100;
+        if(product.priceDiscount !== 0){
+            product.priceAfterDiscount = newPrice;
+            setPriceWithDiscount(newPrice)
+        }
+        console.log(product.priceAfterDiscount);
+    }, [product]);
 
     useEffect(() => {
         console.log(productId);
@@ -72,8 +86,6 @@ function EditProductPage() {
             });
     }, [productId]);
 
-    const {name, description, price, categoryId, stock} = product;
-
     //apoi edit pentru produsul respectiv
 
     const handleSubmit = (e) => {
@@ -85,6 +97,8 @@ function EditProductPage() {
             name,
             description,
             price,
+            priceAfterDiscount,
+            priceDiscount,
             categoryId: {
                 id: parseInt(categoryIdEdit),
                 name: categories[selectedCategoryIndex].name
@@ -143,6 +157,24 @@ function EditProductPage() {
                                     value={price}
                                     onChange={(e) => setProduct({...product, price: e.target.value})}
                                 />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" controlId="exampleForm.priceDiscount">
+                                <Form.Label>Price discount (if exists)</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    placeholder="13.38 $"
+                                    value={priceDiscount}
+                                    onChange={(e) => setProduct({...product, priceDiscount: e.target.value})}
+                                />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" name="priceAfterDiscount"
+                                        controlId="exampleForm.priceAfterDiscount">
+                                <Form.Label>Price After Discount Applied</Form.Label>
+                                <Form.Control type="text" value={priceWithDiscount}
+                                              onChange={(e) => setProduct({...product, priceAfterDiscount: e.target.value})}
+                                              aria-label="Disabled input example" disabled readOnly/>
                             </Form.Group>
 
                             <Form.Group className="mb-3" name="categoryIdEdit"

@@ -54,4 +54,9 @@ public class ProductController {
         productService.deleteById(productId);
         return ResponseEntity.ok("The product was deleted!");
     }
+
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam String query) {
+        return productService.searchProductsByNameAndCategory(query);
+    }
 }

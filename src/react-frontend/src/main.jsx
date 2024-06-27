@@ -22,6 +22,7 @@ import ManageUsers from "./routes/User/ManageUsers.jsx";
 import ManageOrders from "./Orders/ManageOrders.jsx";
 import Orders from "./routes/User/Orders.jsx";
 import AdminLayout from "./Layouts/AdminLayout.jsx";
+import SearchProducts from "./routes/Products/SearchProducts.jsx";
 
 const router = createBrowserRouter([
     {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
             {
                 path: "/user/manageOrders",
                 element: <Orders/>
+            },
+            {
+              path: "/search",
+              element: <SearchProducts/>
             },
         ]
     },

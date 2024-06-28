@@ -23,6 +23,7 @@ import ManageOrders from "./Orders/ManageOrders.jsx";
 import Orders from "./routes/User/Orders.jsx";
 import AdminLayout from "./Layouts/AdminLayout.jsx";
 import SearchProducts from "./routes/Products/SearchProducts.jsx";
+import ProductsInCategory from "./routes/Products/ProductsInCategory.jsx";
 
 const router = createBrowserRouter([
     {
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
               path: "/search",
               element: <SearchProducts/>
             },
+            {
+                path: "/productsInCategory/:categoryId",
+                element: <ProductsInCategory/>
+            }
         ]
     },
     {

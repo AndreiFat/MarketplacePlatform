@@ -134,12 +134,12 @@ function ManageAddresses() {
                     Settings</Breadcrumb.Item>
                 <Breadcrumb.Item active>Addresses</Breadcrumb.Item>
             </Breadcrumb>
-            <Row className={"mb-3"}>
+            <Row className={"mb-3 align-items-center"}>
                 <Col md={6}>
                     <h3>Addresses</h3>
                 </Col>
                 <Col className={"d-flex justify-content-end"} md={6}>
-                    <Button variant="primary" onClick={handleShow}>
+                    <Button variant="dark" className={"px-4 py-3 rounded-4"} onClick={handleShow}>
                         Add a new address
                     </Button>
                 </Col>
@@ -158,13 +158,13 @@ function ManageAddresses() {
                                         <h6 className={"text-muted"}>{address.region}, {address.country} </h6>
                                         <Row>
                                             <Col md={6}>
-                                                <Button variant="warning" className={"w-100"}
+                                                <Button variant="warning" className={"rounded-4 w-100"}
                                                         onClick={() => handleShowEdit(address.id, address.address, address.region, address.country)}>
                                                     Edit
                                                 </Button>
                                             </Col>
                                             <Col md={6}>
-                                                <Button variant="danger" className={"w-100"}
+                                                <Button variant="danger" className={"rounded-4 w-100"}
                                                         onClick={() => handleDelete(address.id)}>
                                                     Delete
                                                 </Button>
@@ -225,11 +225,11 @@ function ManageAddresses() {
                                         <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                     </Form.Group>
 
-                                    <Button className={"me-3"} variant="secondary"
+                                    <Button variant="secondary" className={"me-3 px-4 py-3 rounded-4"}
                                             onClick={() => handleCloseEdit(address.id)}>
                                         Close
                                     </Button>
-                                    <Button variant="primary" type={"button"}
+                                    <Button variant="dark" className={"px-4 py-3 rounded-4"} type={"button"}
                                             onClick={() => handleOnSubmitEdit(address.id)}>
                                         Submit
                                     </Button>
@@ -277,10 +277,10 @@ function ManageAddresses() {
                             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                         </Form.Group>
 
-                        <Button className={"me-3"} variant="secondary" onClick={handleClose}>
+                        <Button className={"me-3 py-3 px-4 rounded-4"} variant="secondary" onClick={handleClose}>
                             Close
                         </Button>
-                        <Button variant="primary" type={"submit"} onClick={handleClose}>
+                        <Button variant="dark" className={"py-3 px-4 rounded-4"} type={"submit"} onClick={handleClose}>
                             Submit
                         </Button>
                     </Form>

@@ -2,9 +2,9 @@ import Carousel from 'react-bootstrap/Carousel';
 
 
 function HomePageCarousel() {
-    const carouselSize = '300px';
+    const carouselSize = '350px';
     return (
-        <Carousel style={{height: `${carouselSize}`}} className={"mb-4"}>
+        <Carousel style={{height: `${carouselSize}`}} className={"w-75"}>
             <Carousel.Item interval={2000} style={{height: `${carouselSize}`}} className={"carousel-item-container"}>
                 <div className="image-carousel">
                     <img style={{

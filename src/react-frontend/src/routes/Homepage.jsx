@@ -1,12 +1,10 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import {faCartShopping, faTrash, faWallet} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useLocalState} from "../Utilities/useLocalState.js";
-import {Card, Col, Offcanvas, Row, Toast} from "react-bootstrap";
+import {Card, Offcanvas, Row, Toast} from "react-bootstrap";
 import Cookies from 'js-cookie';
 import Form from "react-bootstrap/Form";
 import Product from "../components/Product.jsx";
@@ -14,6 +12,7 @@ import HomePageCarousel from "../components/Carousel.jsx";
 import {jwtDecode} from "jwt-decode";
 import CheckoutButton from "../Orders/Payment/CheckoutButton.jsx";
 import truncateWords from "../Utilities/truncateWords.js";
+import CategoriesSidebar from "../components/CategoriesSidebar.jsx";
 
 function Homepage() {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -405,19 +404,10 @@ function Homepage() {
 
     return (
         <div className="container p-0 justify-content-center">
-            <Row>
-                <Col>
-                    {categories ? (
-                        categories.map((category) => (
-                            <Link key={category.id} to={`/productsInCategory/${category.id}`}>
-                                {category.name} <br/>
-                            </Link>
-                        ))) : (<></>)}
-                </Col>
-                <Col>
-                    <HomePageCarousel></HomePageCarousel>
-                </Col>
-            </Row>
+            <div className="d-flex mb-4">
+                <CategoriesSidebar categories={categories}></CategoriesSidebar>
+                <HomePageCarousel></HomePageCarousel>
+            </div>
             <Row>
                 {products ? (
                     products.map((product) => (
@@ -490,7 +480,7 @@ function Homepage() {
                                                                             className={"fs-6 mb-0 text-muted"}>QTY: {product.quantity}</span>
                                                                             <span>|</span>
                                                                             <span
-                                                                                className={"fs-6 mb-0 text-muted"}>{product.price} Ron</span>
+                                                                                className={"fs-6 mb-0 text-muted"}>{product.priceAfterDiscount ? product.priceAfterDiscount : product.price} Ron</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>

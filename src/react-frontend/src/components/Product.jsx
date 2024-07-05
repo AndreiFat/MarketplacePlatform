@@ -2,15 +2,23 @@ import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBoxesStacked, faHeart} from "@fortawesome/free-solid-svg-icons";
-import {Card, Col} from "react-bootstrap";
+import {Badge, Card, Col} from "react-bootstrap";
 import StarRating from "./StarRating.jsx";
 
 function Product({product, saveAsFavourite, addToCart}) {
     return (
         <>
             <Col className={""} xl={3} md={4} sm={6}>
-                <Card className={"mb-4 p-2 shadow-sm border-0 rounded-4"}>
-
+                <Card
+                    className={product.priceAfterDiscount ? "mb-4 p-2 shadow-discount border-2 border-danger-subtle rounded-4" : "mb-4 p-2 shadow-sm border-0 rounded-4"}>
+                    {product.priceDiscount ? (
+                        <Badge className={"fs-6 fw-medium rounded-pill px-3 py-2 bg-danger shadow-sm"}
+                               style={{
+                                   position: "absolute",
+                                   right: "12px",
+                                   top: "12px"
+                               }}>-{product.priceDiscount}% discount</Badge>
+                    ) : (<></>)}
                     {product.images[0] ? (
                         <Card.Img variant="top" height={"200px"}
                                   className={"p-2 rounded-4"}
@@ -19,9 +27,20 @@ function Product({product, saveAsFavourite, addToCart}) {
                                   alt={product.images[0].name}/>) : <></>
                     }
                     <Card.Body>
-                        <Link to={`${product.id}`} className={"text-decoration-none text-dark"}>
+                        <Link to={`/product/${product.id}`} className={"text-decoration-none text-dark"}>
                             <h4>{product.name}</h4>
-                            <h5 className={"text-secondary"}><b>{product.price} Ron</b></h5>
+                            {
+                                product.priceAfterDiscount ? (<>
+                                        <span
+                                            className={"text-danger fs-5 fw-semibold me-2"}>{product.priceAfterDiscount} RON</span>
+                                        <span
+                                            className={"text-secondary text-decoration-line-through fs-7 me-2"}>{product.price} RON</span>
+                                        <Badge
+                                            className={"bg-danger fw-medium rounded-pill"}>-{product.priceDiscount}%</Badge></>)
+                                    : (
+                                        <h5 className={"text-secondary"}>
+                                            <b>{product.price} RON</b></h5>)
+                            }
                         </Link>
                         <StarRating
                             rating={product.rating}></StarRating>
@@ -45,14 +64,15 @@ function Product({product, saveAsFavourite, addToCart}) {
                                              className={"me-2 py-3 p-0-5 rounded-4 d-flex align-items-center justify-content-center"}
                                              style={{width: "210px", height: 48.5}}
                                              variant={"dark "}
-                                             onClick={() => addToCart(product.id, product.price)}>
+                                             onClick={product.priceAfterDiscount ? (() => addToCart(product.id, product.priceAfterDiscount)) : (() => addToCart(product.id, product.price))}>
                                              Add to Cart
                                              {/*<FontAwesomeIcon*/}
                                              {/*    className={"ms-2 p-0-5"}*/}
                                              {/*    size={"lg"}*/}
                                              {/*    icon={faCartShopping}*/}
                                              {/*/>*/}
-                                         </Button></span>
+                                         </Button>
+                                         </span>
                                 <span><Button variant="outline-danger" className={"border-2 py-2 rounded-4"}
                                               onClick={() => saveAsFavourite(product.id)}>
                                         <FontAwesomeIcon

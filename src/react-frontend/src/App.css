@@ -167,3 +167,43 @@ button:focus:not(:focus-visible) {
     color: #294d00 !important;
     background-color: rgba(121, 183, 42, 0.15) !important;
 }
+
+.sidebar-links:hover {
+    border-radius: 8px;
+    font-weight: 500 !important;
+    color: #345e00 !important;
+    background-color: rgba(121, 183, 42, 0.15) !important;
+}
+
+.btn-outline-success {
+    border-color: #4B8535 !important;
+    color: #4B8535 !important;
+}
+
+.btn-outline-success:hover {
+    background-color: #4B8535 !important;
+    border-color: #4B8535 !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-success:active {
+    background-color: #4B8535 !important;
+    border-color: #4B8535 !important;
+    color: #ffffff !important;
+    border-left: transparent;
+}
+
+.form-control:focus {
+    border-color: rgba(35, 56, 13, 0.4) !important;
+    outline: 0;
+    box-shadow: 0 0 white !important;
+}
+
+.shadow-discount {
+    box-shadow: rgba(220, 0, 0, 0.2) 0 2px 14px;
+}
+
+a {
+    text-decoration: none !important;
+    color: #4B8535 !important;
+}

@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import {useLocalState} from "../Utilities/useLocalState.js";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCircleUser, faHeart} from "@fortawesome/free-solid-svg-icons";
+import {faCircleUser, faHeart, faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
 import Cookies from "js-cookie";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -16,11 +16,43 @@ function Header() {
     const [query, setQuery] = useState('');
     const navigate = useNavigate();
 
-    function handleSearch(e){
+    const decodedToken = jwtDecode(jwt);
+    const userEmail = decodedToken.sub;
+
+    function handleSearch(e) {
         e.preventDefault();
         console.log("Form submitted", query);
         navigate(`/search?query=${query}`);
     }
+
+    const [user, setUser] = useState({
+        name: "",
+        surname: "",
+        email: "",
+        dateOfBirth: "",
+        password: "",
+        phoneNumber: "",
+    });
+
+    useState(() => {
+        const userBody = {
+            email: userEmail
+        };
+
+        fetch('http://localhost:8080/users/viewUser', {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${jwt}`
+            },
+            method: 'POST',
+            body: JSON.stringify(userBody)
+        }).then((response) => {
+            console.log(response.status);
+            return response.json();
+        }).then((userData) => {
+            setUser(userData);
+        });
+    });
 
     useEffect(() => {
         if (jwt) {
@@ -55,21 +87,24 @@ function Header() {
                             height={"54px"}
                         />
                     </Navbar.Brand>
-                    <Form className="d-flex" onSubmit={event => handleSearch(event)}>
+                    <Form className="d-flex w-25" onSubmit={event => handleSearch(event)}>
                         <FormControl
                             id="searchBar"
                             name="search"
                             type="text"
                             placeholder="Search"
-                            className="me-2"
+                            className="rounded-start-4 rounded-end-0 py-2 px-4 border border-end-0"
                             aria-label="Search"
                             value={query}
                             onChange={(e) => {
                                 e.preventDefault()
                                 console.log(e.target.value)
-                                setQuery(e.target.value)}}
+                                setQuery(e.target.value)
+                            }}
                         />
-                        <Button variant="outline-success" type="submit">Search</Button>
+                        <Button variant="outline-success" className={"rounded-start-0 rounded-end-4 px-3"}
+                                type="submit"><FontAwesomeIcon
+                            size={"lg"} icon={faMagnifyingGlass}/></Button>
                     </Form>
                     {
                         loggedIn ? (
@@ -80,9 +115,10 @@ function Header() {
                                     icon={faHeart}
                                     size={"2xl"}/></Link>
                                 <Link to={"/accountSettings"}
-                                      className={"text-decoration-none btn btn-outline-dark rounded-pill"}>
-                                    <span className={"me-2"}>Account </span><FontAwesomeIcon icon={faCircleUser}
-                                                                                             size={"2xl"}/>
+                                      className={"text-decoration-none btn btn-outline-success rounded-pill"}>
+                                    <span className={"me-2"}>{user ? `${user.name} ${user.surname}` : "Account"} </span><FontAwesomeIcon
+                                    icon={faCircleUser}
+                                    size={"2xl"}/>
                                 </Link>
                             </div>
                         ) : (

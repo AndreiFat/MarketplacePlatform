@@ -80,37 +80,40 @@ function HomepageAdmin() {
         <>
             <Row>
                 <Col>
-                    <Card>
+                    <Card className={"rounded-4 border-0"}>
                         <Card.Body>
                             <span className={"me-3"}>
-                                <Button variant={"dark"}><Link className={"text-decoration-none text-white"}
-                                                               to={"/addingProducts"}>Add Products</Link></Button>
+                                <Button variant={"dark"} className={"rounded-4 px-4 py-3"}><Link
+                                    className={"text-decoration-none text-white"}
+                                    to={"/addingProducts"}>Add Products</Link></Button>
                             </span>
                             <span className={"me-3"}>
-                            <Button variant={"dark"}><Link className={"text-decoration-none text-white"}
-                                                           to={"/admin/manageDiscountCoupons"}>View Discount Coupons</Link></Button>
+                            <Button variant={"dark"} className={"rounded-4 px-4 py-3"}><Link
+                                className={"text-decoration-none text-white"}
+                                to={"/admin/manageDiscountCoupons"}>View Discount Coupons</Link></Button>
                         </span>
                             <span className={"me-3"}>
-                            <Button variant={"dark"}><Link className={"text-decoration-none text-white"}
-                                                           to={"/admin/manageCategories"}>View Categories</Link></Button>
+                            <Button variant={"dark"} className={"rounded-4 px-4 py-3"}><Link
+                                className={"text-decoration-none text-white"}
+                                to={"/admin/manageCategories"}>View Categories</Link></Button>
                         </span>
                             <span className={"me-3"}>
-                            <Button variant={"dark"}><Link className={"text-decoration-none text-white"}
-                                                           to={"/admin/manageOrders"}>View Orders</Link></Button>
+                            <Button variant={"dark"} className={"rounded-4 px-4 py-3"}><Link
+                                className={"text-decoration-none text-white"}
+                                to={"/admin/manageOrders"}>View Orders</Link></Button>
                         </span>
                         </Card.Body>
                     </Card>
                 </Col>
             </Row>
             <Row className={"my-3"}>
-                <Row>
-                    {products ? (
-                        products.map((product) => (
-                            <ProductAdmin key={product.id} product={product}
-                                          deleteProduct={deleteProduct}></ProductAdmin>
+                {products ? (
+                    products.map((product) => (
+                        <ProductAdmin key={product.id} product={product}
+                                      deleteProduct={deleteProduct}></ProductAdmin>
 
-                        ))) : (<></>)}
-                </Row>
+                    ))) : (<></>)}
+
             </Row>
 
         </>

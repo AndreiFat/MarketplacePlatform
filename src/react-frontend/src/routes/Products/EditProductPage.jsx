@@ -4,7 +4,8 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {useLocalState} from "../../Utilities/useLocalState.js";
 import AdminRoute from "../../Utilities/AdminRoute.jsx";
-import {Card, Col, Row} from "react-bootstrap";
+import {Card, Col, Row,} from "react-bootstrap";
+
 
 function EditProductPage() {
     //fetch pentru produsul respectiv
@@ -30,13 +31,13 @@ function EditProductPage() {
     const {productId} = useParams();
 
     const [categoryIdEdit, setCategoryIdEdit] = useState("");
-    const {name, description, price,priceAfterDiscount, priceDiscount, categoryId, stock} = product;
-    const [priceWithDiscount, setPriceWithDiscount]=useState(0)
+    const {name, description, price, priceAfterDiscount, priceDiscount, categoryId, stock} = product;
+    const [priceWithDiscount, setPriceWithDiscount] = useState(0)
 
     useEffect(() => {
         let newPrice = 0;
-        newPrice= product.price - (product.priceDiscount * product.price) / 100;
-        if(product.priceDiscount !== 0){
+        newPrice = product.price - (product.priceDiscount * product.price) / 100;
+        if (product.priceDiscount !== 0) {
             product.priceAfterDiscount = newPrice;
             setPriceWithDiscount(newPrice)
         }
@@ -125,9 +126,9 @@ function EditProductPage() {
 
     return (
         <>
-            <Row className={"justify-content-center pt-4"}>
+            <Row className={"justify-content-center pt-3"}>
                 <Col md={7}>
-                    <Card className={"p-4"}>
+                    <Card className={"p-4 border-0 rounded-4 shadow-sm"}>
                         <Form>
                             <Form.Group className="mb-3" controlId="exampleForm.name">
                                 <Form.Label>Product name</Form.Label>
@@ -142,7 +143,7 @@ function EditProductPage() {
                             <Form.Group className="mb-3" controlId="exampleForm.description">
                                 <Form.Label>Product description</Form.Label>
                                 <Form.Control
-                                    type="text"
+                                    as="textarea" rows={4}
                                     placeholder="Limited edition Barbie Doll."
                                     value={description}
                                     onChange={(e) => setProduct({...product, description: e.target.value})}
@@ -173,15 +174,18 @@ function EditProductPage() {
                                         controlId="exampleForm.priceAfterDiscount">
                                 <Form.Label>Price After Discount Applied</Form.Label>
                                 <Form.Control type="text" value={priceWithDiscount}
-                                              onChange={(e) => setProduct({...product, priceAfterDiscount: e.target.value})}
+                                              onChange={(e) => setProduct({
+                                                  ...product,
+                                                  priceAfterDiscount: e.target.value
+                                              })}
                                               aria-label="Disabled input example" disabled readOnly/>
                             </Form.Group>
 
                             <Form.Group className="mb-3" name="categoryIdEdit"
                                         controlId="exampleForm.categoryIdEdit">
                                 <Form.Label>Category</Form.Label>
-                                <select name="categoryIdEdit" value={categoryIdEdit}
-                                        onChange={(e) => setCategoryIdEdit(e.target.value)}>
+                                <Form.Select name="categoryIdEdit" value={categoryIdEdit}
+                                             onChange={(e) => setCategoryIdEdit(e.target.value)}>
                                     <option value="">Select option</option>
                                     {categories !== null && categories.map(category => (
                                         <option key={category.id} value={category.id}
@@ -190,7 +194,7 @@ function EditProductPage() {
                                         </option>
                                     ))}
 
-                                </select>
+                                </Form.Select>
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="exampleForm.stock">
@@ -204,11 +208,12 @@ function EditProductPage() {
                             </Form.Group>
 
                             <Form.Group>
-                                <Button className={"me-3"} color="primary" type="submit" onClick={handleSubmit}>
-                                    Update product
-                                </Button>
-                                <Button variant="danger">
+                                <Button variant="danger" className={"me-3 px-4 py-3 rounded-4"}>
                                     <Link className={"text-decoration-none text-white"} to={'/'}>Cancel</Link>
+                                </Button>
+                                <Button className={"rounded-4 px-4 py-3"} variant="dark" type="submit"
+                                        onClick={handleSubmit}>
+                                    Update product
                                 </Button>
                             </Form.Group>
                         </Form>

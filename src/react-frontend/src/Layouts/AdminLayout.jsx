@@ -1,6 +1,5 @@
 import {Container} from "react-bootstrap";
 import {Outlet} from "react-router-dom";
-import Footer from "../components/Footer.jsx";
 import AdminHeader from "../components/AdminHeader.jsx";
 
 function GeneralLayout() {
@@ -11,7 +10,7 @@ function GeneralLayout() {
                 <Container>
                     <Outlet/>
                 </Container>
-                <Footer/>
+                {/*<Footer/>*/}
             </Container>
         </>
     )

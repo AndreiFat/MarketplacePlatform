@@ -1,8 +1,9 @@
 package com.project.marketplaceplatform.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.marketplaceplatform.dto.OrderRequestDTO;
 import com.project.marketplaceplatform.dto.ProductRequestDTO;
-import com.project.marketplaceplatform.model.Order;
+import com.project.marketplaceplatform.dto.StatusRequestDTO;
 import com.project.marketplaceplatform.model.OrderItem;
 import com.project.marketplaceplatform.model.Product;
 import com.project.marketplaceplatform.model.User;
@@ -32,7 +33,7 @@ public class OrderController {
 
 
     @PostMapping("/addOrder")
-    public ResponseEntity<?> createOrder(@RequestBody OrderRequestDTO orderRequest, @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> createOrder(@RequestBody OrderRequestDTO orderRequest, @AuthenticationPrincipal User user) throws JsonProcessingException {
         return orderService.createOrder(orderRequest, user);
     }
 
@@ -58,8 +59,8 @@ public class OrderController {
     }
 
     @PutMapping("/editOrderStatus/{orderId}")
-    public ResponseEntity<?> editOrderStatus(@PathVariable Long orderId, @RequestBody Order order) {
-        return orderService.updateOrderStatus(orderId, order);
+    public ResponseEntity<?> editOrderStatus(@PathVariable Long orderId, @RequestBody StatusRequestDTO status) {
+        return orderService.updateOrderStatus(orderId, status);
     }
 
     @GetMapping("/admin/viewOrders")

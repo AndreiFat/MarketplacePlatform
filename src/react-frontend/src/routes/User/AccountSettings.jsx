@@ -14,6 +14,9 @@ function AccountSettings() {
     const decodedToken = jwtDecode(jwt);
     const userEmail = decodedToken.sub;
 
+    const userRole = decodedToken.authorities;
+    const isAdmin = userRole.includes('ROLE_ADMIN');  //verific rolul userului din jwt
+
     const [user, setUser] = useState({
         name: "",
         surname: "",
@@ -240,10 +243,11 @@ function AccountSettings() {
                         </Card.Body>
                     </Card>
                 </Col>
+
                 <Col md={4}>
                     <Card className={"p-2 rounded-4 border-0 shadow-sm mb-4"}>
                         <Card.Body>
-                            <h3 className={"text-start mb-3"}>Manage Addresses</h3>
+                            <h4 className={"text-start mb-3"}>Manage Addresses</h4>
                             <Button variant={"dark"} className={"py-3 px-4 text-center rounded-4"}>
                                 <Link to={"/addresses"} className={"text-decoration-none text-white"}>Manage
                                     Addresses</Link></Button>
@@ -251,15 +255,23 @@ function AccountSettings() {
                     </Card>
                     <Card className={"p-2 rounded-4 border-0 mb-4 shadow-sm"}>
                         <Card.Body>
-                            <h3 className={"text-start mb-3"}>Manage Orders</h3>
+                            <h4 className={"text-start mb-3"}>Manage Orders</h4>
                             <Button variant={"dark"} className={"py-3 px-4 text-center rounded-4"}>
                                 <Link to={"/user/ManageOrders"}
                                       className={"text-decoration-none text-white"}>Orders</Link></Button>
                         </Card.Body>
                     </Card>
+                    <Card className={"p-2 rounded-4 border-0 mb-4 shadow-sm"}>
+                        <Card.Body>
+                            <h4 className={"text-start mb-3"}>Admin Panel</h4>
+                            <Button variant={"dark"} className={"py-3 px-4 text-center rounded-4"}>
+                                <Link to={"/admin"}
+                                      className={"text-decoration-none text-white"}>Go to Admin Panel</Link></Button>
+                        </Card.Body>
+                    </Card>
                     <Card className={"p-2 rounded-4 border-0 shadow-sm"}>
                         <Card.Body>
-                            <h3 className={"text-start mb-3"}>Logout</h3>
+                            <h4 className={"text-start mb-3"}>Logout</h4>
                             <Button onClick={handleLogout} variant={"dark"}
                                     className={"py-3 px-4 text-center rounded-4"}>Logout
                             </Button>

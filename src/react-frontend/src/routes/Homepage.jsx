@@ -1,7 +1,7 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Button from 'react-bootstrap/Button';
-import {faCartShopping, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faCartShopping, faTrash, faWallet} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useLocalState} from "../Utilities/useLocalState.js";
 import {Card, Col, Offcanvas, Row, Toast} from "react-bootstrap";
@@ -10,6 +10,8 @@ import Form from "react-bootstrap/Form";
 import Product from "../components/Product.jsx";
 import HomePageCarousel from "../components/Carousel.jsx";
 import {jwtDecode} from "jwt-decode";
+import CheckoutButton from "../Orders/Payment/CheckoutButton.jsx";
+import truncateWords from "../Utilities/truncateWords.js";
 
 function Homepage() {
     const [loggedIn, setLoggedIn] = useState(false);
@@ -35,6 +37,7 @@ function Homepage() {
     const [images, setImages] = useState(null);
 
     const [productsInOrder, setProductsInOrder] = useState([]);
+    const [productsInPayment, setProductsInPayment] = useState([]);
 
     const [order, setOrder] = useState(() => {
         const storedOrder = Cookies.get('order');
@@ -196,10 +199,34 @@ function Homepage() {
         });
     };
 
+    const getProductsInOrderForPayment = () => {
+        if (!products || !order.productIds) {
+            // Handle the case when products or order.productIds is not available
+            return [];
+        }
+
+        return order.productIds.map(orderItem => {
+            const product = products.find(product => product.id === orderItem.id);
+            if (product) {
+                return {
+                    id: product.id,
+                    name: product.name,
+                    description: product.description,
+                    quantity: orderItem.quantity,
+                    price: product.price,
+                    images: product.images // Assuming images is an array of image objects
+                };
+            }
+            return null;
+        }).filter(product => product !== null);
+    };
+
     useEffect(() => {
         const updatedProductsInOrder = getProductsInOrder();
+        const productToPayment = getProductsInOrderForPayment();
         console.log('Updated Products in Order:', updatedProductsInOrder);
         setProductsInOrder(updatedProductsInOrder);
+        setProductsInPayment(productToPayment)
     }, [order, products]); // Include products in the dependencies
 
     const [addresses, setAddresses] = useState(null);
@@ -253,34 +280,15 @@ function Homepage() {
         fetchData();
     }, []);
 
-    function handleSubmitOrder() {
-        const orderBody = {...order}
-        orderBody.address.id = addressId
-        orderBody.price = priceAfterDiscount();
-        orderBody.discount.id = couponId
-        console.log(orderBody)
-
-        fetch('http://localhost:8080/orders/addOrder', {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${jwt}`
-            },
-            method: 'POST',
-            body: JSON.stringify(orderBody)
-        }).then((response) => response.json())
-            .then((order) => {
-                console.log(order);
-                Cookies.remove('order');
-                window.location.reload();
-            });
-    }
 
     const [discountValue, setDiscountValue] = useState(0);
 
     useEffect(() => {
         // Calculate discount when the selected coupon changes
         if (couponId !== "") {
-            const coupon = discountCoupons.find(coupon => String(coupon.id) === couponId);
+            const coupon = discountCoupons.find(coupon => {
+                return String(coupon.categoryId.id) === couponId
+            });
             if (coupon) {
                 // Assuming the coupon object has a 'discountValue' property
                 const discount = coupon.discount || 0;
@@ -304,7 +312,9 @@ function Homepage() {
     }
 
     const verifyCategory = () => {
-        return productsInOrder.find((product) => String(product.categoryId.id) === couponId)
+        return productsInOrder.find((product) => {
+            return String(product.categoryId.id) === couponId
+        })
     }
 
     const removeItemFromCart = (productId) => {
@@ -336,6 +346,34 @@ function Homepage() {
         // Update the productsInOrder state with the modified values
         setProductsInOrder(updatedProductsInOrder);
     };
+
+
+    const handlePaymentSubmit = () => {
+        const orderBody = {...order}
+        if (addressId !== '') {
+            orderBody.address.id = addressId
+            orderBody.price = priceAfterDiscount();
+            orderBody.discount.id = couponId
+            console.log(orderBody)
+
+            fetch('http://localhost:8080/orders/addOrder', {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${jwt}`
+                },
+                method: 'POST',
+                body: JSON.stringify(orderBody)
+            }).then((response) => response.json())
+                .then((order) => {
+                    console.log(order);
+                    Cookies.remove('order');
+                    window.location.reload();
+                });
+        } else {
+            setMessage("Address not selected!")
+            toggleShowToast()
+        }
+    }
 
     return (
         <div className="container p-0 justify-content-center">
@@ -388,105 +426,193 @@ function Homepage() {
                         {
                             loggedIn ? (
                                 <div>
-                                    <h3>Products in Cart:</h3>
-                                    {productsInOrder.map(product => (
+                                    <div className={" cart-height"} id={"product-cart-list"}>
+                                        <div>
+                                            {productsInOrder.length !== 0 ? (
+                                                productsInOrder.map(product => (
+                                                    <Card key={product.id}
+                                                          className={"my-3 rounded-4 border-secondary-subtle"}>
+                                                        <Card.Body className={"p-3"}>
+                                                            <div
+                                                                className={"d-flex justify-content-between align-items-center"}>
+                                                                <div className={"d-flex gap-3 align-items-center"}>
+                                                                    <div
+                                                                        style={{
+                                                                            backgroundImage: `url(data:image/jpeg;base64,${product.images[0].imageData})`,
+                                                                            backgroundSize: 'cover',
+                                                                            backgroundPosition: 'center',
+                                                                            height: 60,
+                                                                            width: 86,
+                                                                            borderRadius: 6
+                                                                        }}>
 
-                                        <Card key={product.id} className={"my-3 rounded-4"}>
-                                            <Card.Body className={"p-4"}>
-                                                <Row>
-                                                    <Col md={8}>
-                                                        <div className={""}>
-                                                            <h5>{product.name}</h5>
-                                                            <span
-                                                                className={"fs-6 me-3"}><b>Quantity</b>: {product.quantity}</span>
-                                                        </div>
-                                                    </Col>
-                                                    <Col md={4} className={"d-flex"}>
-                                                         <span className={"my-auto"}>
-                                                            <Button
-                                                                className={"ms-5 btn btn-danger rounded-pill py-2"}
-                                                                onClick={() => removeItemFromCart(product.id)}><FontAwesomeIcon
-                                                                icon={faTrash} size={"lg"}/></Button>
-                                                        </span>
-
-                                                    </Col>
-                                                </Row>
-
-
-                                            </Card.Body>
-                                        </Card>
-
-                                    ))}
-
-                                    <div className="offcanvas-footer d-block">
-                                        <Form>
-                                            <h3><b>Price</b> : {order.price} RON</h3>
-                                            {couponId && verifyCategory() ? (
+                                                                    </div>
+                                                                    <div>
+                                                                        <h6 className={"mb-1"}>{truncateWords(product.name, 5)}</h6>
+                                                                        <div className={"d-flex gap-2"}>
+                                                                        <span
+                                                                            className={"fs-6 mb-0 text-muted"}>QTY: {product.quantity}</span>
+                                                                            <span>|</span>
+                                                                            <span
+                                                                                className={"fs-6 mb-0 text-muted"}>{product.price} Ron</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className={"d-flex flex-column align-items-end"}>
+                                                                    <div className={"d-flex gap-2"}>
+                                                                        {/*<div style={{*/}
+                                                                        {/*    width: 32,*/}
+                                                                        {/*    height: 32,*/}
+                                                                        {/*    borderRadius: 100*/}
+                                                                        {/*}}*/}
+                                                                        {/*     className={"bg-secondary-subtle d-flex align-items-center justify-content-center"}>*/}
+                                                                        {/*    <Button*/}
+                                                                        {/*        className={"bg-transparent border-0 text-secondary"}*/}
+                                                                        {/*        onClick={() => removeItemFromCart(product.id)}><FontAwesomeIcon*/}
+                                                                        {/*        icon={faPlus}/></Button>*/}
+                                                                        {/*</div>*/}
+                                                                        {/*<div style={{*/}
+                                                                        {/*    width: 32,*/}
+                                                                        {/*    height: 32,*/}
+                                                                        {/*    borderRadius: 100*/}
+                                                                        {/*}}*/}
+                                                                        {/*     className={"bg-secondary-subtle d-flex align-items-center justify-content-center"}>*/}
+                                                                        {/*    <Button*/}
+                                                                        {/*        className={"bg-transparent border-0 text-secondary"}*/}
+                                                                        {/*        onClick={() => removeItemFromCart(product.id)}><FontAwesomeIcon*/}
+                                                                        {/*        icon={faMinus}/></Button>*/}
+                                                                        {/*</div>*/}
+                                                                        <div style={{
+                                                                            width: 32,
+                                                                            height: 32,
+                                                                            borderRadius: 100
+                                                                        }}
+                                                                             className={"bg-danger d-flex align-items-center justify-content-center"}>
+                                                                            <Button
+                                                                                className={"bg-transparent border-0"}
+                                                                                onClick={() => removeItemFromCart(product.id)}><FontAwesomeIcon
+                                                                                icon={faTrash}/></Button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </Card.Body>
+                                                    </Card>
+                                                ))) : (<>
                                                 <div>
-                                                    <h5><b>Discount</b> : {calculateDiscountedPrice()} RON</h5>
-                                                    <h5><b>Total Price</b> : {priceAfterDiscount()} RON</h5>
+                                                    <div className={"d-flex justify-content-center py-5 mt-5"}>
+                                                        <img src="/src/assets/empty-cart.svg" alt="" height={"150"}/>
+                                                    </div>
+                                                    <h6 className={"text-center text-muted fs-6 mb-1"}>Cart is
+                                                        empty</h6>
+                                                    <p
+                                                        className={"text-center text-black-50 fs-6"}>Return to
+                                                        the store
+                                                        and
+                                                        choose your favorite products.</p>
+
                                                 </div>
-                                            ) : (<></>)}
-                                            <Form.Group className="my-3" name="couponId"
-
-                                                        controlId="exampleForm.couponId">
-                                                <Form.Label className={"me-3"}>Discount Coupons</Form.Label>
-                                                <select name="couponId"
-                                                        value={couponId}
-                                                        onChange={(e) => setCouponId(e.target.value)}
-                                                >
-                                                    <option value="">Select</option>
-
-                                                    {discountCoupons ?
-                                                        (discountCoupons.map(discountCoupon => (
-                                                            <option key={discountCoupon.id} value={discountCoupon.id}
-                                                                    data-array={discountCoupons.indexOf(discountCoupon)}>
-                                                                {discountCoupon.code} | Extra {discountCoupon.discount}%
-                                                            </option>))) : (<></>)
-                                                    }
-                                                </select>
-                                            </Form.Group>
-                                            <Form.Group className="mb-3" name="addressId"
-
-                                                        controlId="exampleForm.addressId">
-                                                <Form.Label className={"me-3"}>Address</Form.Label>
-                                                <select name="addressId"
-                                                        value={addressId}
-                                                        onChange={(e) => setAddressId(e.target.value)}
-                                                >
-                                                    <option value="">Select</option>
-                                                    {addresses ? (
-                                                        addresses.map(address => (
-                                                            <option key={address.id} value={address.id}
-                                                                    data-array={addresses.indexOf(address)}>
-                                                                {address.address}, {address.region}...
-                                                            </option>
-                                                        ))
-                                                    ) : (<></>)
-                                                    }
-                                                </select>
-                                            </Form.Group>
-                                            <Button variant="primary" className={"w-100"} size="lg"
-                                                    onClick={handleSubmitOrder}>
-                                                Send Order
-                                            </Button>
-                                        </Form>
+                                            </>)}
+                                        </div>
+                                        <div id="spacer" className={"flex-grow-1"}></div>
                                     </div>
+
                                 </div>
                             ) : (<>
                                 <h4 className={""}>Please login before place an order</h4>
                             </>)
                         }
-
                     </Offcanvas.Body>
+                    {loggedIn ? (
+                        productsInOrder.length !== 0 ? (
+                            <div className="offcanvas-footer bg-white w-100 p-4 shadow">
+                                <Form>
+                                    <Form.Group className="my-3" name="couponId" controlId="exampleForm.couponId">
+                                        <Form.Label className={"me-3"}>Discount Coupons</Form.Label>
+                                        <Form.Select aria-label="Default select example" name="couponId"
+                                                     value={couponId}
+                                                     onChange={(e) => setCouponId(e.target.value)}>
+                                            <option value="">Select</option>
+
+                                            {discountCoupons ?
+                                                (discountCoupons.map(discountCoupon => (
+                                                    <option key={discountCoupon.id}
+                                                            value={discountCoupon.categoryId.id}
+                                                            data-array={discountCoupons.indexOf(discountCoupon)}>
+                                                        {discountCoupon.code} |
+                                                        Extra {discountCoupon.discount}%
+                                                    </option>))) : (<></>)
+                                            }
+                                        </Form.Select>
+                                    </Form.Group>
+                                    <Form.Group className="mb-3" name="addressId" controlId="exampleForm.addressId">
+                                        <Form.Label className={"me-3"}>Address</Form.Label>
+                                        <Form.Select aria-label="Default select example" name="addressId"
+                                                     value={addressId}
+                                                     onChange={(e) => setAddressId(e.target.value)}
+                                        >
+                                            <option value="">Select</option>
+                                            {addresses ? (
+                                                addresses.map(address => (
+                                                    <option key={address.id} value={address.id}
+                                                            data-array={addresses.indexOf(address)}>
+                                                        {address.address}, {address.region}...
+                                                    </option>
+                                                ))
+                                            ) : (<></>)
+                                            }
+                                        </Form.Select>
+                                    </Form.Group>
+                                    <div className={"py-3 border-secondary-subtle border-top"}>
+                                        {couponId && verifyCategory() ? (<>
+                                                <div
+                                                    className={"d-flex justify-content-between align-items-center text-muted"}>
+                                                    <span>Price</span>
+                                                    <span>{order.price} RON</span>
+                                                </div>
+                                                <div
+                                                    className={"d-flex justify-content-between align-items-center text-muted"}>
+                                                    <span>Discount</span>
+                                                    <span>{calculateDiscountedPrice()} RON</span>
+                                                </div>
+                                                <div
+                                                    className={"d-flex justify-content-between align-items-center mt-2"}>
+                                                    <span className={"fs-5 font-semibold"}>Total Price</span>
+                                                    <span
+                                                        className={"fs-5 font-semibold"}>{priceAfterDiscount()} RON</span>
+                                                </div>
+                                            </>
+                                        ) : (<>
+                                            <div className={"d-flex justify-content-between align-items-center"}>
+                                                <span className={"fs-5 font-semibold"}>Price</span>
+                                                <span className={"fs-5 font-semibold"}>{order.price} RON</span>
+                                            </div>
+                                        </>)}
+                                    </div>
+                                    <div className="d-flex justify-content-between gap-2 align-items-center">
+                                        <CheckoutButton products={productsInPayment} order={order}
+                                                        priceAfterDiscount={priceAfterDiscount}
+                                                        addressId={addressId} couponId={couponId}/>
+                                        <div className={"text-center text-muted"}>OR</div>
+                                        <button onClick={handlePaymentSubmit}
+                                                className={"btn btn-dark py-3 rounded-4 w-100"}
+                                                type={"button"}>
+                                            Pay on Delivery <FontAwesomeIcon icon={faWallet} size={"lg"}
+                                                                             className={"ms-2"}/>
+                                        </button>
+                                    </div>
+                                </Form>
+                            </div>) : (<></>)) : (<></>)}
                 </Offcanvas>
             </div>
             <div style={{
                 position: 'absolute',
-                top: 100,
-                right: 30,
+                top: "150px",
+                right: "50%",
+                transform: `translate(50%, -50%)`,
+                zIndex: 100
             }}>
-                <Toast onClose={toggleShowToast} show={showToast} animation={true} delay={2500} autohide
+                <Toast onClose={toggleShowToast} show={showToast} animation={true} delay={3500} autohide
                        className={"sticky-top"}>
                     <Toast.Header>
                         <img

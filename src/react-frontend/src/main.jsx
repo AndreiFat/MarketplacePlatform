@@ -23,6 +23,9 @@ import ManageOrders from "./Orders/ManageOrders.jsx";
 import Orders from "./routes/User/Orders.jsx";
 import AdminLayout from "./Layouts/AdminLayout.jsx";
 import SearchProducts from "./routes/Products/SearchProducts.jsx";
+import {Elements} from "@stripe/react-stripe-js";
+import {loadStripe} from "@stripe/stripe-js";
+import ManagePayment from "./routes/Payments/ManagePayment.jsx";
 
 const router = createBrowserRouter([
     {
@@ -66,8 +69,12 @@ const router = createBrowserRouter([
                 element: <Orders/>
             },
             {
-              path: "/search",
-              element: <SearchProducts/>
+                path: "/search",
+                element: <SearchProducts/>
+            },
+            {
+                path: "/success",
+                element: <ManagePayment/>
             },
         ]
     },
@@ -123,9 +130,12 @@ const router = createBrowserRouter([
 
 
 ]);
+const stripePromise = loadStripe(`${import.meta.env.VITE_STRIPE_API_KEY}`);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <RouterProvider router={router}/>
+        <Elements stripe={stripePromise}>
+            <RouterProvider router={router}/>
+        </Elements>
     </React.StrictMode>,
 )

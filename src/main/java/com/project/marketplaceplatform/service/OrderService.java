@@ -1,8 +1,8 @@
 package com.project.marketplaceplatform.service;
 
-import com.project.marketplaceplatform.dto.OrderRequestDTO;
-import com.project.marketplaceplatform.dto.ProductDTO;
-import com.project.marketplaceplatform.dto.ProductRequestDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.marketplaceplatform.dto.*;
 import com.project.marketplaceplatform.model.*;
 import com.project.marketplaceplatform.repository.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class OrderService {
@@ -68,7 +67,7 @@ public class OrderService {
     }
 
     @Transactional
-    public ResponseEntity<?> createOrder(OrderRequestDTO orderRequest, User user) {
+    public ResponseEntity<?> createOrder(OrderRequestDTO orderRequest, User user) throws JsonProcessingException {
         Order order = new Order();
         Address address;
         List<ProductRequestDTO> productIds = orderRequest.getProductIds();
@@ -84,10 +83,17 @@ public class OrderService {
         }
         DiscountCoupon discountCoupon = discountCouponsRepository.findByDiscountCouponId(orderRequest.getDiscount().getId());
 
+        // Create initial status object
+        ObjectMapper objectMapper = new ObjectMapper();
+        OrderStatus initialStatus = new OrderStatus("PENDING", new Date());
+        // Serialize initial status to JSON
+        String initialStatusJson = objectMapper.writeValueAsString(initialStatus);
+
+        order.setTrackingNumber("ORD" + UUID.randomUUID().toString());
         // SET ORDER PROPERTIES
         order.setQuantity(quantity);
         order.setUserId(user);
-        order.setStatus("PENDING");
+        order.setStatus(initialStatusJson);
         order.setAddressId(address);
         order.setPrice(price);
         order.setDiscountId(discountCoupon);
@@ -155,11 +161,27 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-    public ResponseEntity<Order> updateOrderStatus(Long orderId, Order order) {
-        orderRepository.findById(orderId).ifPresent((foundOrder -> {
-            foundOrder.setStatus(order.getStatus());
-            orderRepository.save(foundOrder);
-        }));
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Order> updateOrderStatus(Long orderId, StatusRequestDTO statusUpdateDTO) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+
+            // Convert StatusUpdateDTO to JSON string
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String statusJson = objectMapper.writeValueAsString(statusUpdateDTO);
+                order.setStatus(statusJson);
+
+                // Save updated order
+                orderRepository.save(order);
+
+                return ResponseEntity.ok(order);
+            } catch (JsonProcessingException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

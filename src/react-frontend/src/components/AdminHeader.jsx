@@ -36,13 +36,14 @@ function AdminHeader() {
         <>
             <Navbar expand="lg" className="shadow-sm bg-white mb-4 py-3" fixed={"top"}>
                 <Container>
-                    <Navbar.Brand href="/admin">
+                    <Navbar.Brand href="/" className={"d-flex align-items-center gap-3"}>
                         <img
                             src="/src/assets/Logo.png"
                             className="d-inline-block align-top me-1"
                             alt="React Bootstrap logo"
                             height={"36px"}
                         />
+                        <h4 className={"mb-0"}>Admin Panel</h4>
                     </Navbar.Brand>
                     {
                         loggedIn ? (

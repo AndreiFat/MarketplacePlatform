@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBoxesStacked, faCartShopping, faHeart} from "@fortawesome/free-solid-svg-icons";
+import {faBoxesStacked, faHeart} from "@fortawesome/free-solid-svg-icons";
 import {Card, Col} from "react-bootstrap";
 import StarRating from "./StarRating.jsx";
 
@@ -28,12 +28,12 @@ function Product({product, saveAsFavourite, addToCart}) {
                         <div id="product-stock" className={"py-1"}>
                             {
                                 product.stock > 0 ? (
-                                    <p className={"text-success m-0"}><FontAwesomeIcon icon={faBoxesStacked}
-                                                                                       className={"me-1"}/> Available
+                                    <p className={"text-success mb-1"}><FontAwesomeIcon icon={faBoxesStacked}
+                                                                                        className={"me-1"}/> Available
                                         on
                                         stock</p>
-                                ) : (<p className={"text-danger m-0"}><FontAwesomeIcon icon={faBoxesStacked}
-                                                                                       className={"me-1"}/> Out of
+                                ) : (<p className={"text-danger mb-1"}><FontAwesomeIcon icon={faBoxesStacked}
+                                                                                        className={"me-1"}/> Out of
                                     stock
                                 </p>)
                             }
@@ -41,16 +41,17 @@ function Product({product, saveAsFavourite, addToCart}) {
                         <div className={"d-flex justify-content-center w-100"}>
                             <div className="d-flex align-items-center">
                                      <span>
-                                         <Button className={"me-2 py-2 p-0-5 rounded-4"}
-                                                 style={{width: "210px"}}
-                                                 variant={"dark "}
-                                                 onClick={() => addToCart(product.id, product.price)}>
+                                         <Button
+                                             className={"me-2 py-3 p-0-5 rounded-4 d-flex align-items-center justify-content-center"}
+                                             style={{width: "210px", height: 48.5}}
+                                             variant={"dark "}
+                                             onClick={() => addToCart(product.id, product.price)}>
                                              Add to Cart
-                                         <FontAwesomeIcon
-                                             className={"ms-2 p-0-5"}
-                                             size={"lg"}
-                                             icon={faCartShopping}
-                                         />
+                                             {/*<FontAwesomeIcon*/}
+                                             {/*    className={"ms-2 p-0-5"}*/}
+                                             {/*    size={"lg"}*/}
+                                             {/*    icon={faCartShopping}*/}
+                                             {/*/>*/}
                                          </Button></span>
                                 <span><Button variant="outline-danger" className={"border-2 py-2 rounded-4"}
                                               onClick={() => saveAsFavourite(product.id)}>

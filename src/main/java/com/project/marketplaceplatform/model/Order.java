@@ -22,7 +22,10 @@ public class Order {
     private List<OrderItem> orderItems = new ArrayList<>();
 
     private int quantity;
+    @Column(columnDefinition = "LONGTEXT")
     private String status;
+    @Column(columnDefinition = "TEXT")
+    private String trackingNumber;
     private double price;
     private LocalDate deliveryTime;
     @CreationTimestamp

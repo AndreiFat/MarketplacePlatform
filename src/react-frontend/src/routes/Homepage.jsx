@@ -343,7 +343,7 @@ function Homepage() {
         fetch('http://localhost:8080/categories/categories-with-products', {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${jwt}`,
+                //Authorization: `Bearer ${jwt}`,
             },
             method: 'GET'
         })

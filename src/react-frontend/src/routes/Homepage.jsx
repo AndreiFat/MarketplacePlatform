@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import {faCartShopping, faTrash, faWallet} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -53,6 +55,8 @@ function Homepage() {
             }
         };
     });
+
+    const [categories, setCategories] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -347,7 +351,6 @@ function Homepage() {
         setProductsInOrder(updatedProductsInOrder);
     };
 
-
     const handlePaymentSubmit = () => {
         const orderBody = {...order}
         if (addressId !== '') {
@@ -375,9 +378,42 @@ function Homepage() {
         }
     }
 
+    useEffect(() => {
+        fetch('http://localhost:8080/categories/categories-with-products', {
+            headers: {
+                "Content-Type": "application/json",
+                //Authorization: `Bearer ${jwt}`,
+            },
+            method: 'GET'
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((categoriesData) => {
+                setCategories(categoriesData);
+                console.log("categories")
+                console.log(categoriesData)
+            })
+            .catch((error) => {
+                console.error('Error fetching categories:', error);
+            });
+    }, []);
+
+
     return (
         <div className="container p-0 justify-content-center">
             <Row>
+                <Col>
+                    {categories ? (
+                        categories.map((category) => (
+                            <Link key={category.id} to={`/productsInCategory/${category.id}`}>
+                                {category.name} <br/>
+                            </Link>
+                        ))) : (<></>)}
+                </Col>
                 <Col>
                     <HomePageCarousel></HomePageCarousel>
                 </Col>

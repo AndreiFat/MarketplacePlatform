@@ -26,6 +26,8 @@ import SearchProducts from "./routes/Products/SearchProducts.jsx";
 import {Elements} from "@stripe/react-stripe-js";
 import {loadStripe} from "@stripe/stripe-js";
 import ManagePayment from "./routes/Payments/ManagePayment.jsx";
+import ProductsInCategory from "./routes/Products/ProductsInCategory.jsx";
+
 
 const router = createBrowserRouter([
     {
@@ -76,6 +78,10 @@ const router = createBrowserRouter([
                 path: "/success",
                 element: <ManagePayment/>
             },
+            {
+                path: "/productsInCategory/:categoryId",
+                element: <ProductsInCategory/>
+            }
         ]
     },
     {

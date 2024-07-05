@@ -1,8 +1,10 @@
 package com.project.marketplaceplatform.service;
 
+import com.project.marketplaceplatform.model.Category;
 import com.project.marketplaceplatform.model.Image;
 import com.project.marketplaceplatform.model.Product;
 import com.project.marketplaceplatform.model.Review;
+import com.project.marketplaceplatform.repository.CategoryRepository;
 import com.project.marketplaceplatform.repository.ImageRepository;
 import com.project.marketplaceplatform.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,6 +31,9 @@ public class ProductService {
 
     @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
@@ -102,10 +107,16 @@ public class ProductService {
         return totalRating / reviews.size();
     }
 
-    public List<Product> searchProductsByNameAndCategory(String name) {
+    public List<Product> searchProductsByName(String name) {
         logger.info("Searching for products with name containing '{}'", name);
         List<Product> products = productRepository.findByNameContainingIgnoreCase(name);
         logger.info("Found {} products", products.size()); // Log the number of products found
         return products;
+    }
+
+    public List<Product> getProductsByCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category ID: " + categoryId));
+        return productRepository.findByCategoryId(category);
     }
 }

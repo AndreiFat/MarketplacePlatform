@@ -42,4 +42,9 @@ public class CategoryController {
         categoryService.deleteById(categoryId);
         return ResponseEntity.ok("The category was deleted!");
     }
+
+    @GetMapping("/categories-with-products")
+    public List<Category> getCategoriesWithProducts() {
+        return categoryService.getCategoriesWithProducts();
+    }
 }

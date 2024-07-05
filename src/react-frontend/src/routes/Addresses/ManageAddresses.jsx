@@ -5,6 +5,7 @@ import {Breadcrumb, Card, Col, Modal, Row} from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 
 function ManageAddresses() {
+    const apiURL = import.meta.env.VITE_API_URL;
 
     const [jwt, setJwt] = useLocalState("", "jwt");
     const [addresses, setAddresses] = useState(null);
@@ -20,7 +21,7 @@ function ManageAddresses() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const userFetch = await fetch(`http://localhost:8080/address/viewAddresses`, {
+                const userFetch = await fetch(`${apiURL}/address/viewAddresses`, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${jwt}`
@@ -76,7 +77,7 @@ function ManageAddresses() {
             country: country,
         }
 
-        fetch(`http://localhost:8080/address/addAddress`, {
+        fetch(`${apiURL}/address/addAddress`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -97,7 +98,7 @@ function ManageAddresses() {
             country: countryEdit,
         }
         console.log(addressBody, id)
-        fetch(`http://localhost:8080/address/editAddress/${id}`, {
+        fetch(`${apiURL}/address/editAddress/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -107,13 +108,14 @@ function ManageAddresses() {
         }).then((response) => response.json())
             .then((data) => {
                 console.log(data);
-                window.location.reload();
+
             });
         handleCloseEdit(id);
+        window.location.reload();
     }
 
     function handleDelete(id) {
-        fetch(`http://localhost:8080/address/deleteAddress/${id}`, {
+        fetch(`${apiURL}/address/deleteAddress/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`

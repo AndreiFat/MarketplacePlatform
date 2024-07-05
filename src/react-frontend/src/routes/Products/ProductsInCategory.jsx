@@ -14,6 +14,7 @@ import Accordion from "react-bootstrap/Accordion";
 import Product from "../../components/Product.jsx";
 
 function ProductsInCategory() {
+    const apiURL = import.meta.env.VITE_API_URL;
     let userEmail = "";
 
     const [jwt, setJwt] = useLocalState("", "jwt");
@@ -23,11 +24,11 @@ function ProductsInCategory() {
         console.log("decodat " + userEmail);
     }
 
-    const { categoryId } = useParams();
+    const {categoryId} = useParams();
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:8080/products/productsInCategory?categoryId=${categoryId}`,{
+        fetch(`${apiURL}/products/productsInCategory?categoryId=${categoryId}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`,

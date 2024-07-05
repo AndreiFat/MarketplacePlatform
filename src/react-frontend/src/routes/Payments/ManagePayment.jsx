@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import Button from "react-bootstrap/Button";
 
 function ManagePayment() {
+    const apiURL = import.meta.env.VITE_API_URL;
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const sessionId = searchParams.get('session_id');
@@ -15,7 +16,7 @@ function ManagePayment() {
 
     useEffect(() => {
         if (sessionId) {
-            fetch(`http://localhost:8080/confirm-and-update?session_id=${sessionId}`, {
+            fetch(`${apiURL}/confirm-and-update?session_id=${sessionId}`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${jwt}`

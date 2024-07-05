@@ -10,6 +10,7 @@ import OrderStatusBadge from "../../components/OrderStatusBadge.jsx";
 import CopyToClipboardButton from "../../components/CopyToClipboardButton.jsx";
 
 function Orders() {
+    const apiURL = import.meta.env.VITE_API_URL;
     const [jwt, setJwt] = useLocalState("", "jwt");
 
     const [orders, setOrders] = useState(null)
@@ -24,7 +25,7 @@ function Orders() {
 
             try {
                 //First Fetch
-                const orderFetch = await fetch('http://localhost:8080/orders/viewOrders', {
+                const orderFetch = await fetch(`${apiURL}/orders/viewOrders`, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${jwt}`,
@@ -45,7 +46,7 @@ function Orders() {
             }
             // try {
             //     //First Fetch
-            //     const productFetch = await fetch('http://localhost:8080/products/viewProducts', {
+            //     const productFetch = await fetch('${apiURL}/products/viewProducts', {
             //         headers: {
             //             "Content-Type": "application/json",
             //             // Authorization: `Bearer ${jwt}`,
@@ -74,7 +75,7 @@ function Orders() {
     const downloadPDF = (order) => {
         setLoading(true)
 
-        fetch('http://localhost:8080/orders/user/orderItems', {
+        fetch(`${apiURL}/orders/user/orderItems`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`,
@@ -207,7 +208,7 @@ function Orders() {
         event.stopPropagation();
         setLoadingOrder(true)
 
-        fetch('http://localhost:8080/orders/user/orderItems', {
+        fetch(`${apiURL}/orders/user/orderItems`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`,

@@ -7,6 +7,7 @@ import AdminRoute from "../../Utilities/AdminRoute.jsx";
 import {Card, Col, Row} from "react-bootstrap";
 
 function EditProductPage() {
+    const apiURL = import.meta.env.VITE_API_URL;
     //fetch pentru produsul respectiv
     const [product, setProduct] = useState({
         name: '',
@@ -30,13 +31,13 @@ function EditProductPage() {
     const {productId} = useParams();
 
     const [categoryIdEdit, setCategoryIdEdit] = useState("");
-    const {name, description, price,priceAfterDiscount, priceDiscount, categoryId, stock} = product;
-    const [priceWithDiscount, setPriceWithDiscount]=useState(0)
+    const {name, description, price, priceAfterDiscount, priceDiscount, categoryId, stock} = product;
+    const [priceWithDiscount, setPriceWithDiscount] = useState(0)
 
     useEffect(() => {
         let newPrice = 0;
-        newPrice= product.price - (product.priceDiscount * product.price) / 100;
-        if(product.priceDiscount !== 0){
+        newPrice = product.price - (product.priceDiscount * product.price) / 100;
+        if (product.priceDiscount !== 0) {
             product.priceAfterDiscount = newPrice;
             setPriceWithDiscount(newPrice)
         }
@@ -46,7 +47,7 @@ function EditProductPage() {
     useEffect(() => {
         console.log(productId);
 
-        fetch('http://localhost:8080/categories/viewCategories', {
+        fetch(`${apiURL}/categories/viewCategories`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -68,7 +69,7 @@ function EditProductPage() {
             });
 
 
-        fetch(`http://localhost:8080/products/${productId}`, {
+        fetch(`${apiURL}/products/${productId}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -106,7 +107,7 @@ function EditProductPage() {
             stock
         };
 
-        fetch(`http://localhost:8080/products/editProduct/${productId}`, {
+        fetch(`${apiURL}/products/editProduct/${productId}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -173,7 +174,10 @@ function EditProductPage() {
                                         controlId="exampleForm.priceAfterDiscount">
                                 <Form.Label>Price After Discount Applied</Form.Label>
                                 <Form.Control type="text" value={priceWithDiscount}
-                                              onChange={(e) => setProduct({...product, priceAfterDiscount: e.target.value})}
+                                              onChange={(e) => setProduct({
+                                                  ...product,
+                                                  priceAfterDiscount: e.target.value
+                                              })}
                                               aria-label="Disabled input example" disabled readOnly/>
                             </Form.Group>
 

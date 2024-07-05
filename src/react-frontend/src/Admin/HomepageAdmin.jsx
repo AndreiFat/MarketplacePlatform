@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import {Link} from "react-router-dom";
 
 function HomepageAdmin() {
+    const apiURL = import.meta.env.VITE_API_URL;
     const [products, setProducts] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
     const [jwt, setJwt] = useLocalState("", "jwt");
@@ -16,7 +17,7 @@ function HomepageAdmin() {
 
             try {
                 //First Fetch
-                const productFetch = await fetch('http://localhost:8080/products/viewProducts', {
+                const productFetch = await fetch(`${apiURL}/products/viewProducts`, {
                     headers: {
                         "Content-Type": "application/json",
                         // Authorization: `Bearer ${jwt}`,
@@ -58,7 +59,7 @@ function HomepageAdmin() {
     }, []);
 
     function deleteProduct(productId) {
-        fetch(`http://localhost:8080/products/deleteProduct/${productId}`, {
+        fetch(`${apiURL}/products/deleteProduct/${productId}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${jwt}`,

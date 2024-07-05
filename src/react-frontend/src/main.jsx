@@ -62,10 +62,10 @@ const router = createBrowserRouter([
                 path: "/accountSettings",
                 element: <AccountSettings/>
             },
-            {
-                path: "/addresses",
-                element: <ManageAddresses/>
-            },
+            // {
+            //     path: "/addresses",
+            //     element: <ManageAddresses/>
+            // },
             {
                 path: "/user/manageOrders",
                 element: <Orders/>
@@ -100,6 +100,10 @@ const router = createBrowserRouter([
                 path: "/register",
                 element: <Register/>,
             },
+            {
+                path: "/addresses",
+                element: <ManageAddresses/>
+            }
         ]
 
     },

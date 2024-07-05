@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import Button from "react-bootstrap/Button";
 
 function ManagePayment() {
+    const apiURL = import.meta.env.VITE_API_URL;
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const sessionId = searchParams.get('session_id');
@@ -15,7 +16,7 @@ function ManagePayment() {
 
     // useEffect(() => {
     //     if (sessionId) {
-    //         fetch(`http://localhost:8080/confirm-and-update?session_id=${sessionId}`, {
+    //         fetch(`${apiURL}/confirm-and-update?session_id=${sessionId}`, {
     //             headers: {
     //                 "Content-Type": "application/json",
     //                 Authorization: `Bearer ${jwt}`
@@ -47,7 +48,8 @@ function ManagePayment() {
                     </div>
                     <h3 className={"text-center"}>Your order was canceled!</h3>
                     <div className="d-flex justify-content-center py-3">
-                        <p className={"text-center text-muted w-75"}>We understood that your order wasn't proper for you, but if we can improve something on the order process, please feel free to tell us.</p>
+                        <p className={"text-center text-muted w-75"}>We understood that your order wasn't proper for
+                            you, but if we can improve something on the order process, please feel free to tell us.</p>
                     </div>
                     <div className="d-flex gap-3 justify-content-center">
                         <Button className={" btn-secondary py-3 px-4 rounded-pill"}>

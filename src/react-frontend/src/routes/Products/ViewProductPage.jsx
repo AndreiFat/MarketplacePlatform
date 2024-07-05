@@ -13,7 +13,7 @@ import ReviewAccordion from "../../components/ReviewAccordion.jsx";
 import Accordion from "react-bootstrap/Accordion";
 
 function ViewProductPage() {
-
+    const apiURL = import.meta.env.VITE_API_URL;
     const {productId} = useParams();
     console.log(productId);
     let userEmail = ""
@@ -38,7 +38,7 @@ function ViewProductPage() {
         }
         const fetchData = async () => {
             try {
-                const userFetch = await fetch(`http://localhost:8080/users/viewUser`, {
+                const userFetch = await fetch(`${apiURL}/users/viewUser`, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${jwt}`
@@ -75,7 +75,7 @@ function ViewProductPage() {
             }
         };
 
-        fetch(`http://localhost:8080/products/${productId}/addReview`, {
+        fetch(`${apiURL}/products/${productId}/addReview`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -120,7 +120,7 @@ function ViewProductPage() {
     const [numberOfStarsEdit, setNumberOfStarsEdit] = useState("");
 
     useEffect(() => {
-        fetch(`http://localhost:8080/products/${productId}`, {
+        fetch(`${apiURL}/products/${productId}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`,
@@ -138,7 +138,7 @@ function ViewProductPage() {
     }, [productId]);
 
     useEffect(() => {
-        fetch(`http://localhost:8080/products/${productId}/viewReviews`, {
+        fetch(`${apiURL}/products/${productId}/viewReviews`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`,
@@ -161,7 +161,7 @@ function ViewProductPage() {
     }, []);
 
     function deleteReviewByUser(reviewId) {
-        fetch(`http://localhost:8080/products/deleteReview/${reviewId}`, {
+        fetch(`${apiURL}/products/deleteReview/${reviewId}`, {
             headers: {
                 Authorization: `Bearer ${jwt}`
             },
@@ -204,7 +204,7 @@ function ViewProductPage() {
             numberOfStars: numberOfStarsEdit
         };
 
-        fetch(`http://localhost:8080/products/editReview/${reviewId}`, {
+        fetch(`${apiURL}/products/editReview/${reviewId}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`

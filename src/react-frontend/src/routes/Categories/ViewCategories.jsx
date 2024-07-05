@@ -119,9 +119,13 @@ function ViewCategories() {
 
     return (
         <>
-            <Button variant="primary" className={"mb-3"} onClick={handleShow}>
-                Add new category
-            </Button>
+
+            <div className="flex">
+                <h5></h5>
+                <Button variant="dark" className={"mb-3 rounded-4 px-4 py-3"} onClick={handleShow}>
+                    Add new category
+                </Button>
+            </div>
             {
                 categories ? (
                         categories.map((category) => (

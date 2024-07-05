@@ -66,6 +66,20 @@ public class OrderService {
         return productDTO;
     }
 
+    private static String generate24DigitNumber() {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+
+        // Ensure the first digit is not zero
+        sb.append(random.nextInt(9) + 1);
+
+        // Generate the remaining 23 digits
+        for (int i = 0; i < 16; i++) {
+            sb.append(random.nextInt(10));
+        }
+        return sb.toString();
+    }
+
     @Transactional
     public ResponseEntity<?> createOrder(OrderRequestDTO orderRequest, User user) throws JsonProcessingException {
         Order order = new Order();
@@ -86,14 +100,22 @@ public class OrderService {
         // Create initial status object
         ObjectMapper objectMapper = new ObjectMapper();
         OrderStatus initialStatus = new OrderStatus("PENDING", new Date());
-        // Serialize initial status to JSON
-        String initialStatusJson = objectMapper.writeValueAsString(initialStatus);
 
-        order.setTrackingNumber("ORD" + UUID.randomUUID().toString());
+        // Create status history and add the initial status
+        StatusRequestDTO statusHistory = new StatusRequestDTO();
+        statusHistory.addStatus(initialStatus);
+
+        // Serialize status history to JSON
+        String statusHistoryJson = objectMapper.writeValueAsString(statusHistory);
+
+        // Assuming 'order' is your order object with a setStatus method
+        order.setStatus(statusHistoryJson);
+
+        order.setTrackingNumber("ORD" + generate24DigitNumber());
         // SET ORDER PROPERTIES
         order.setQuantity(quantity);
         order.setUserId(user);
-        order.setStatus(initialStatusJson);
+
         order.setAddressId(address);
         order.setPrice(price);
         order.setDiscountId(discountCoupon);

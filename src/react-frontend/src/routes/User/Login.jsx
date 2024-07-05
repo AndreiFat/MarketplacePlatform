@@ -7,6 +7,7 @@ import {useLocalState} from "../../Utilities/useLocalState.js";
 import {Link} from "react-router-dom";
 
 function Login() {
+    const apiURL = import.meta.env.VITE_API_URL;
     const [validated, setValidated] = useState(false);
     const [jwt, setJwt] = useLocalState("", "jwt");
 
@@ -26,7 +27,7 @@ function Login() {
             password,
         }
 
-        fetch('http://localhost:8080/api/auth/login', {
+        fetch(`${apiURL}/api/auth/login`, {
             headers: {
                 "Content-Type": "application/json",
             },

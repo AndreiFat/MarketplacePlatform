@@ -8,6 +8,7 @@ import {Card} from "react-bootstrap";
 import BackButton from "../../components/BackButton.jsx";
 
 function AddProductPage() {
+    const apiURL = import.meta.env.VITE_API_URL;
     const [jwt, setJwt] = useLocalState("", "jwt");
 
     const [products, setProducts] = useState(null);
@@ -29,7 +30,7 @@ function AddProductPage() {
 
 
     useEffect(() => {
-        fetch('http://localhost:8080/categories/viewCategories', {
+        fetch(`${apiURL}/categories/viewCategories`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`,
@@ -86,7 +87,7 @@ function AddProductPage() {
 
         const sendData = async () => {
 
-            const productFetch = await fetch('http://localhost:8080/products/addProduct', {
+            const productFetch = await fetch(`${apiURL}/products/addProduct`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${jwt}`,
@@ -102,7 +103,7 @@ function AddProductPage() {
                 console.error('User details are null or undefined.');
             }
 
-            const imagesFetch = await fetch(`http://localhost:8080/products/saveImagesToProduct/${productDetails.id}`, {
+            const imagesFetch = await fetch(`${apiURL}/products/saveImagesToProduct/${productDetails.id}`, {
                 headers: {
                     Authorization: `Bearer ${jwt}`,
                 },
@@ -151,21 +152,20 @@ function AddProductPage() {
                             <Form.Control type="number"/>
                         </Form.Group>
 
-                        <Form.Group className="mb-3" name="priceDiscount" value={priceDiscount}
-                                    onChange={(e) => setPriceDiscount(e.target.value)}
-                                    controlId="exampleForm.priceDiscount">
-                            <Form.Label>Price Discount (if exists)</Form.Label>
-                            <Form.Control type="number"/>
-                        </Form.Group>
+                <Form.Group className="mb-3" name="priceDiscount" value={priceDiscount}
+                            onChange={(e) => setPriceDiscount(e.target.value)}
+                            controlId="exampleForm.priceDiscount">
+                    <Form.Label>Price Discount (if exists)</Form.Label>
+                    <Form.Control type="number"/>
+                </Form.Group>
 
-                        <Form.Group className="mb-3" name="priceAfterDiscount" value={priceAfterDiscount}
-                                    onChange={(e) => setPriceDiscount(e.target.value)}
-                                    controlId="exampleForm.priceAfterDiscount">
-                            <Form.Label>Price After Discount Applied</Form.Label>
-                            <Form.Control type="text" value={priceAfterDiscount} aria-label="Disabled input example"
-                                          disabled
-                                          readOnly/>
-                        </Form.Group>
+                <Form.Group className="mb-3" name="priceAfterDiscount" value={priceAfterDiscount}
+                            onChange={(e) => setPriceDiscount(e.target.value)}
+                            controlId="exampleForm.priceAfterDiscount">
+                    <Form.Label>Price After Discount Applied</Form.Label>
+                    <Form.Control type="text" value={priceAfterDiscount} aria-label="Disabled input example" disabled
+                                  readOnly/>
+                </Form.Group>
 
                         <Form.Group className="mb-3" name="categoryId" value={categoryId}
                                     onChange={(e) => setCategoryId(e.target.value)}

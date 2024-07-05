@@ -11,6 +11,7 @@ import StarRating from "../../components/StarRating.jsx";
 
 
 function FavouriteProducts() {
+    const apiURL = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
     const [jwt, setJwt] = useLocalState("", "jwt");
 
@@ -31,7 +32,7 @@ function FavouriteProducts() {
         const fetchData = async () => {
             try {
                 // First fetch
-                const userFetch = await fetch(`http://localhost:8080/users/viewUser`, {
+                const userFetch = await fetch(`${apiURL}/users/viewUser`, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${jwt}`
@@ -49,7 +50,7 @@ function FavouriteProducts() {
                 }
 
                 // Second fetch using data from the first fetch
-                const productsFetch = await fetch(`http://localhost:8080/favoriteProducts/viewFavoriteProducts/`, {
+                const productsFetch = await fetch(`${apiURL}/favoriteProducts/viewFavoriteProducts/`, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${jwt}`
@@ -73,7 +74,7 @@ function FavouriteProducts() {
             product: productId
         }
         console.log(`Saving as favourite ${productId}`)
-        fetch(`http://localhost:8080/favoriteProducts/toggleProduct`, {
+        fetch(`${apiURL}/favoriteProducts/toggleProduct`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`

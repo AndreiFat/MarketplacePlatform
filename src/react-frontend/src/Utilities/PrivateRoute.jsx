@@ -7,6 +7,7 @@ import {useLocalState} from "./useLocalState.js";
 const PrivateRoute = (Component) => {
 
     return (props) => {
+        const apiURL = import.meta.env.VITE_API_URL;
         const [jwt, setJwt] = useLocalState("", "jwt");
         const [isLoading, setIsLoading] = useState(true);
         const [isValid, setIsValid] = useState(null);
@@ -15,7 +16,7 @@ const PrivateRoute = (Component) => {
         useEffect(() => {
             if (jwt) {
                 requestToURL(
-                    `http://localhost:8080/api/auth/validate?token=${jwt}`,
+                    `${apiURL}/api/auth/validate?token=${jwt}`,
                     "GET",
                     jwt
                 ).then((isValid) => {

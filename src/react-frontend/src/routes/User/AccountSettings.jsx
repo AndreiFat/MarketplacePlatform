@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button";
 import {Link} from "react-router-dom";
 
 function AccountSettings() {
+    const apiURL = import.meta.env.VITE_API_URL;
     const [validated, setValidated] = useState(false);
     const [jwt, setJwt] = useLocalState("", "jwt");
 
@@ -40,7 +41,7 @@ function AccountSettings() {
             email: userEmail
         };
 
-        fetch('http://localhost:8080/users/viewUser', {
+        fetch(`${apiURL}/users/viewUser`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -70,7 +71,7 @@ function AccountSettings() {
             phoneNumber: phoneNumber,
         }
 
-        fetch(`http://localhost:8080/users/edit/${user.id}`, {
+        fetch(`${apiURL}/users/edit/${user.id}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -81,6 +82,7 @@ function AccountSettings() {
             .then((user) => {
                 console.log(user);
             });
+        window.location.reload();
 
         const form = e.currentTarget;
         if (form.checkValidity() === false) {

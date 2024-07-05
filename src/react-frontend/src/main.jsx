@@ -27,7 +27,7 @@ import {Elements} from "@stripe/react-stripe-js";
 import {loadStripe} from "@stripe/stripe-js";
 import ManagePayment from "./routes/Payments/ManagePayment.jsx";
 import ProductsInCategory from "./routes/Products/ProductsInCategory.jsx";
-
+import CancelOrder from "./routes/Payments/CancelOrder.jsx";
 
 const router = createBrowserRouter([
     {
@@ -62,10 +62,10 @@ const router = createBrowserRouter([
                 path: "/accountSettings",
                 element: <AccountSettings/>
             },
-            {
-                path: "/addresses",
-                element: <ManageAddresses/>
-            },
+            // {
+            //     path: "/addresses",
+            //     element: <ManageAddresses/>
+            // },
             {
                 path: "/user/manageOrders",
                 element: <Orders/>
@@ -79,9 +79,13 @@ const router = createBrowserRouter([
                 element: <ManagePayment/>
             },
             {
+                path: "/cancelOrder",
+                element: <CancelOrder/>
+            },
+            {
                 path: "/productsInCategory/:categoryId",
                 element: <ProductsInCategory/>
-            }
+            },
         ]
     },
     {
@@ -96,6 +100,10 @@ const router = createBrowserRouter([
                 path: "/register",
                 element: <Register/>,
             },
+            {
+                path: "/addresses",
+                element: <ManageAddresses/>
+            }
         ]
 
     },
@@ -129,8 +137,8 @@ const router = createBrowserRouter([
             },
             {
                 path: "/addingProducts",
-                element: <AddProductPage/>,
-            },
+                element: <AddProductPage/>
+            }
         ]
     }
 

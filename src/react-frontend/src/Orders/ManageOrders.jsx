@@ -3,6 +3,7 @@ import {Form, ListGroup} from "react-bootstrap";
 import {useLocalState} from "../Utilities/useLocalState.js";
 
 function ManageOrders() {
+    const apiURL = import.meta.env.VITE_API_URL;
     const [jwt, setJwt] = useLocalState("", "jwt");
     const [statusName, setStatusName] = useState(null);
     const [currentStatusId, setCurrentStatusId] = useState(null);
@@ -13,7 +14,7 @@ function ManageOrders() {
 
             try {
                 //First Fetch
-                const orderFetch = await fetch('http://localhost:8080/orders/admin/viewOrders', {
+                const orderFetch = await fetch(`${apiURL}/orders/admin/viewOrders`, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${jwt}`,

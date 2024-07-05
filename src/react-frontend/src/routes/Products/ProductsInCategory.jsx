@@ -13,6 +13,7 @@ import truncateWords from "../../Utilities/truncateWords.js";
 import CheckoutButton from "../../Orders/Payment/CheckoutButton.jsx";
 
 function ProductsInCategory() {
+    const apiURL = import.meta.env.VITE_API_URL;
     let userEmail = "";
 
     const apiURL = import.meta.env.VITE_API_URL;

@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import {Card, Col, Form, Modal, Row} from "react-bootstrap";
 
 function ViewDiscountCoupons() {
+    const apiURL = import.meta.env.VITE_API_URL;
     const [discountCoupons, setDiscountCoupons] = useState(null);
     const [jwt, setJwt] = useLocalState("", "jwt");
 
@@ -23,7 +24,7 @@ function ViewDiscountCoupons() {
 
     // fetch pentru cuponuri si pentru categorii
     useState(() => {
-        fetch('http://localhost:8080/discountCoupons/viewCoupons', {
+        fetch(`${apiURL}/discountCoupons/viewCoupons`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -45,7 +46,7 @@ function ViewDiscountCoupons() {
             });
 
 
-        fetch('http://localhost:8080/categories/viewCategories', {
+        fetch(`${apiURL}/categories/viewCategories`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`,
@@ -83,7 +84,7 @@ function ViewDiscountCoupons() {
 
         console.log(discountCouponToAdd);
 
-        fetch('http://localhost:8080/discountCoupons/addCoupon', {
+        fetch(`${apiURL}/discountCoupons/addCoupon`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -98,7 +99,7 @@ function ViewDiscountCoupons() {
     }
 
     function deleteDiscountCoupon(discountCouponId) {
-        fetch(`http://localhost:8080/discountCoupons/deleteCoupon/${discountCouponId}`, {
+        fetch(`${apiURL}/discountCoupons/deleteCoupon/${discountCouponId}`, {
             headers: {
                 Authorization: `Bearer ${jwt}`
             },
@@ -132,7 +133,7 @@ function ViewDiscountCoupons() {
         };
 
 
-        fetch(`http://localhost:8080/discountCoupons/editCoupon/${discountCouponId}`, {
+        fetch(`${apiURL}/discountCoupons/editCoupon/${discountCouponId}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`

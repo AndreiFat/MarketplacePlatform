@@ -8,6 +8,7 @@ import {Card, Col, Row,} from "react-bootstrap";
 
 
 function EditProductPage() {
+    const apiURL = import.meta.env.VITE_API_URL;
     //fetch pentru produsul respectiv
     const [product, setProduct] = useState({
         name: '',
@@ -47,7 +48,7 @@ function EditProductPage() {
     useEffect(() => {
         console.log(productId);
 
-        fetch('http://localhost:8080/categories/viewCategories', {
+        fetch(`${apiURL}/categories/viewCategories`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -69,7 +70,7 @@ function EditProductPage() {
             });
 
 
-        fetch(`http://localhost:8080/products/${productId}`, {
+        fetch(`${apiURL}/products/${productId}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -107,7 +108,7 @@ function EditProductPage() {
             stock
         };
 
-        fetch(`http://localhost:8080/products/editProduct/${productId}`, {
+        fetch(`${apiURL}/products/editProduct/${productId}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`

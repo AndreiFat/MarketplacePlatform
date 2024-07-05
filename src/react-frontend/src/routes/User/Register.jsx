@@ -6,7 +6,7 @@ import {faCakeCandles, faEnvelope, faLock, faPhone, faUser} from "@fortawesome/f
 import {Link} from "react-router-dom";
 
 function Register() {
-
+    const apiURL = import.meta.env.VITE_API_URL;
     const [validated, setValidated] = useState(false);
     const [name, setName] = useState("")
     const [surname, setSurname] = useState("")
@@ -36,7 +36,7 @@ function Register() {
             phoneNumber,
         }
 
-        fetch('http://localhost:8080/api/auth/register', {
+        fetch(`${apiURL}/api/auth/register`, {
             headers: {
                 "Content-Type": "application/json",
             },

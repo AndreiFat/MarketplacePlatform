@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import {Form, Modal} from "react-bootstrap";
 
 function ViewCategories() {
+    const apiURL = import.meta.env.VITE_API_URL;
     const [categories, setCategories] = useState(null);
     const [jwt, setJwt] = useLocalState("", "jwt");
     const [categoryName, setCategoryName] = useState("");
@@ -16,7 +17,7 @@ function ViewCategories() {
 
 
     useState(() => {
-        fetch('http://localhost:8080/categories/viewCategories', {
+        fetch(`${apiURL}/categories/viewCategories`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -46,7 +47,7 @@ function ViewCategories() {
             name: categoryName
         };
 
-        fetch('http://localhost:8080/categories/addCategory', {
+        fetch(`${apiURL}/categories/addCategory`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -61,7 +62,7 @@ function ViewCategories() {
     }
 
     function deleteCategory(categoryId) {
-        fetch(`http://localhost:8080/categories/deleteCategory/${categoryId}`, {
+        fetch(`${apiURL}/categories/deleteCategory/${categoryId}`, {
             headers: {
                 Authorization: `Bearer ${jwt}`
             },
@@ -85,7 +86,7 @@ function ViewCategories() {
             name: categoryEdit
         };
 
-        fetch(`http://localhost:8080/categories/editCategory/${categoryId}`, {
+        fetch(`${apiURL}/categories/editCategory/${categoryId}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`

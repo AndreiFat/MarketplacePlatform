@@ -15,6 +15,7 @@ import truncateWords from "../Utilities/truncateWords.js";
 import CategoriesSidebar from "../components/CategoriesSidebar.jsx";
 
 function Homepage() {
+    const apiURL = import.meta.env.VITE_API_URL;
     const [loggedIn, setLoggedIn] = useState(false);
     const [jwt, setJwt] = useLocalState("", "jwt");
     const [message, setMessage] = useState("")
@@ -62,7 +63,7 @@ function Homepage() {
 
             try {
                 //First Fetch
-                const productFetch = await fetch('http://localhost:8080/products/viewProducts', {
+                const productFetch = await fetch(`${apiURL}/products/viewProducts`, {
                     headers: {
                         "Content-Type": "application/json",
                         // Authorization: `Bearer ${jwt}`,
@@ -109,7 +110,7 @@ function Homepage() {
         }
         console.log(favouriteProduct)
         console.log(`Saving as favourite din homepage ${productId}`)
-        fetch(`http://localhost:8080/favoriteProducts/toggleProduct`, {
+        fetch(`${apiURL}/favoriteProducts/toggleProduct`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -240,7 +241,7 @@ function Homepage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const addressesFetch = await fetch(`http://localhost:8080/address/viewAddresses`, {
+                const addressesFetch = await fetch(`${apiURL}/address/viewAddresses`, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${jwt}`
@@ -258,7 +259,7 @@ function Homepage() {
                 console.error('Error:', error);
             }
         };
-        fetch('http://localhost:8080/discountCoupons/viewCoupons', {
+        fetch(`${apiURL}/discountCoupons/viewCoupons`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -358,7 +359,7 @@ function Homepage() {
             orderBody.discount.id = couponId
             console.log(orderBody)
 
-            fetch('http://localhost:8080/orders/addOrder', {
+            fetch(`${apiURL}/orders/addOrder`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${jwt}`
@@ -378,7 +379,7 @@ function Homepage() {
     }
 
     useEffect(() => {
-        fetch('http://localhost:8080/categories/categories-with-products', {
+        fetch(`${apiURL}/categories/categories-with-products`, {
             headers: {
                 "Content-Type": "application/json",
                 //Authorization: `Bearer ${jwt}`,

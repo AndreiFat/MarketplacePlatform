@@ -125,98 +125,102 @@ function AddProductPage() {
 
     return (
         <>
-            <div className="d-flex gap-3 align-items-center">
-                <BackButton></BackButton>
-                <h3 className={"my-3"}>Add products</h3>
+            <div className={"py-3"}>
+                <div className="d-flex gap-3 align-items-center pb-3">
+                    <BackButton></BackButton>
+                    <h3 className={""}>Add products</h3>
+                </div>
+                <Card className={"border-0 rounded-4 shadow-sm"}>
+                    <Card.Body className={"p-4"}>
+                        <Form encType="multipart/form-data">
+                            <Form.Group className="mb-3" name="name" value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        controlId="exampleForm.name">
+                                <Form.Label>Product name</Form.Label>
+                                <Form.Control type="text"/>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" name="description" value={description}
+                                        onChange={(e) => setDescription(e.target.value)}
+                                        controlId="exampleForm.description">
+                                <Form.Label>Product description</Form.Label>
+                                <Form.Control type="text" as={"textarea"} rows={3}/>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" name="price" value={price}
+                                        onChange={(e) => setPrice(e.target.value)}
+                                        controlId="exampleForm.price">
+                                <Form.Label>Product price</Form.Label>
+                                <Form.Control type="number"/>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" name="priceDiscount" value={priceDiscount}
+                                        onChange={(e) => setPriceDiscount(e.target.value)}
+                                        controlId="exampleForm.priceDiscount">
+                                <Form.Label>Price Discount (if exists)</Form.Label>
+                                <Form.Control type="number"/>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" name="priceAfterDiscount" value={priceAfterDiscount}
+                                        onChange={(e) => setPriceDiscount(e.target.value)}
+                                        controlId="exampleForm.priceAfterDiscount">
+                                <Form.Label>Price After Discount Applied</Form.Label>
+                                <Form.Control type="text" value={priceAfterDiscount} aria-label="Disabled input example"
+                                              disabled
+                                              readOnly/>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" name="categoryId" value={categoryId}
+                                        onChange={(e) => setCategoryId(e.target.value)}
+                                        controlId="exampleForm.categoryId">
+                                <Form.Label>Category</Form.Label>
+                                <Form.Select name="categoryId" value={categoryId}
+                                             onChange={(e) => setCategoryId(e.target.value)}>
+                                    <option value="">Select Category</option>
+                                    {categories !== null && categories.map(category => (
+                                        <option key={category.id} value={category.id}
+                                                data-array={categories.indexOf(category)}>
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </Form.Select>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" name="stock" value={stock}
+                                        onChange={(e) => setStock(e.target.value)}
+                                        controlId="exampleForm.stock">
+                                <Form.Label>Stock</Form.Label>
+                                <Form.Control type="number"/>
+                            </Form.Group>
+
+                            <Form.Group className="position-relative mb-3">
+                                <Form.Label>Images</Form.Label>
+                                <Form.Control
+                                    type="file"
+                                    multiple
+                                    required
+                                    name="file"
+                                    onChange={(e) => setImages([...images, ...e.target.files])}
+                                />
+                                <Form.Control.Feedback type="invalid" tooltip>
+                                    {/*{errors.file}*/}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+
+                            <Form.Group className={"mt-4"}>
+                                <Button className={"me-3 px-4 py-3 rounded-4"} variant="danger"><Link
+                                    className={"text-decoration-none text-white"}
+                                    to={'/'}>Cancel</Link></Button>
+                                <Button variant="dark" className={"px-4 py-3 rounded-4"} type="submit"
+                                        onClick={handleSubmit}>Add
+                                    product</Button>
+
+                            </Form.Group>
+
+                        </Form>
+                    </Card.Body>
+                </Card>
             </div>
-            <Card className={"border-0 rounded-4 shadow-sm"}>
-                <Card.Body className={"p-4"}>
-                    <Form encType="multipart/form-data">
-                        <Form.Group className="mb-3" name="name" value={name} onChange={(e) => setName(e.target.value)}
-                                    controlId="exampleForm.name">
-                            <Form.Label>Product name</Form.Label>
-                            <Form.Control type="text"/>
-                        </Form.Group>
-
-                        <Form.Group className="mb-3" name="description" value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    controlId="exampleForm.description">
-                            <Form.Label>Product description</Form.Label>
-                            <Form.Control type="text" as={"textarea"} rows={4}/>
-                        </Form.Group>
-
-                        <Form.Group className="mb-3" name="price" value={price}
-                                    onChange={(e) => setPrice(e.target.value)}
-                                    controlId="exampleForm.price">
-                            <Form.Label>Product price</Form.Label>
-                            <Form.Control type="number"/>
-                        </Form.Group>
-
-                <Form.Group className="mb-3" name="priceDiscount" value={priceDiscount}
-                            onChange={(e) => setPriceDiscount(e.target.value)}
-                            controlId="exampleForm.priceDiscount">
-                    <Form.Label>Price Discount (if exists)</Form.Label>
-                    <Form.Control type="number"/>
-                </Form.Group>
-
-                <Form.Group className="mb-3" name="priceAfterDiscount" value={priceAfterDiscount}
-                            onChange={(e) => setPriceDiscount(e.target.value)}
-                            controlId="exampleForm.priceAfterDiscount">
-                    <Form.Label>Price After Discount Applied</Form.Label>
-                    <Form.Control type="text" value={priceAfterDiscount} aria-label="Disabled input example" disabled
-                                  readOnly/>
-                </Form.Group>
-
-                        <Form.Group className="mb-3" name="categoryId" value={categoryId}
-                                    onChange={(e) => setCategoryId(e.target.value)}
-                                    controlId="exampleForm.categoryId">
-                            <Form.Label>Category</Form.Label>
-                            <Form.Select name="categoryId" value={categoryId}
-                                         onChange={(e) => setCategoryId(e.target.value)}>
-                                <option value="">Select Category</option>
-                                {categories !== null && categories.map(category => (
-                                    <option key={category.id} value={category.id}
-                                            data-array={categories.indexOf(category)}>
-                                        {category.name}
-                                    </option>
-                                ))}
-                            </Form.Select>
-                        </Form.Group>
-
-                        <Form.Group className="mb-3" name="stock" value={stock}
-                                    onChange={(e) => setStock(e.target.value)}
-                                    controlId="exampleForm.stock">
-                            <Form.Label>Stock</Form.Label>
-                            <Form.Control type="number"/>
-                        </Form.Group>
-
-                        <Form.Group className="position-relative mb-3">
-                            <Form.Label>Images</Form.Label>
-                            <Form.Control
-                                type="file"
-                                multiple
-                                required
-                                name="file"
-                                onChange={(e) => setImages([...images, ...e.target.files])}
-                            />
-                            <Form.Control.Feedback type="invalid" tooltip>
-                                {/*{errors.file}*/}
-                            </Form.Control.Feedback>
-                        </Form.Group>
-
-                        <Form.Group className={"mt-4"}>
-                            <Button className={"me-3 px-4 py-3 rounded-4"} variant="danger"><Link
-                                className={"text-decoration-none text-white"}
-                                to={'/'}>Cancel</Link></Button>
-                            <Button variant="dark" className={"px-4 py-3 rounded-4"} type="submit"
-                                    onClick={handleSubmit}>Add
-                                product</Button>
-
-                        </Form.Group>
-
-                    </Form>
-                </Card.Body>
-            </Card>
         </>
     )
 }

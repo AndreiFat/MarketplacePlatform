@@ -27,6 +27,7 @@ import {loadStripe} from "@stripe/stripe-js";
 import ManagePayment from "./routes/Payments/ManagePayment.jsx";
 import ProductsInCategory from "./routes/Products/ProductsInCategory.jsx";
 import CancelOrder from "./routes/Payments/CancelOrder.jsx";
+import AdminLayout from "./Layouts/AdminLayout.jsx";
 
 const router = createBrowserRouter([
     {
@@ -108,7 +109,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/",
-        element: <GeneralLayout/>,
+        element: <AdminLayout/>,
         children: [
             {
                 path: "/admin",

@@ -1,6 +1,8 @@
 import {Container} from "react-bootstrap";
 import {Outlet} from "react-router-dom";
 import AdminHeader from "../components/AdminHeader.jsx";
+import Footer from "../components/Footer.jsx";
+import RouteVerifier from "../components/RouteVerifier.jsx";
 
 function GeneralLayout() {
     return (
@@ -10,7 +12,9 @@ function GeneralLayout() {
                 <Container>
                     <Outlet/>
                 </Container>
-                {/*<Footer/>*/}
+                <RouteVerifier path={"/"} pathName={location.pathname}>
+                    <Footer/>
+                </RouteVerifier>
             </Container>
         </>
     )

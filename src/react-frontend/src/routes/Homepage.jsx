@@ -409,7 +409,7 @@ function Homepage() {
                 <CategoriesSidebar categories={categories}></CategoriesSidebar>
                 <HomePageCarousel></HomePageCarousel>
             </div>
-            <Row>
+            <Row className={""}>
                 {products ? (
                     products.map((product) => (
                         <Product key={product.id} product={product} addToCart={addToCart}

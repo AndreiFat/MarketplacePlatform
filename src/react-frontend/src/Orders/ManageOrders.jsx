@@ -1,12 +1,14 @@
 import {useEffect, useState} from "react";
 import {Form, ListGroup} from "react-bootstrap";
 import {useLocalState} from "../Utilities/useLocalState.js";
+import OrderStatusBadge from "../components/OrderStatusBadge.jsx";
+import StatusSelect from "../components/StatusSelect.jsx";
+import BackButton from "../components/BackButton.jsx";
 
 function ManageOrders() {
     const apiURL = import.meta.env.VITE_API_URL;
     const [jwt, setJwt] = useLocalState("", "jwt");
     const [statusName, setStatusName] = useState(null);
-    const [currentStatusId, setCurrentStatusId] = useState(null);
 
     const [orders, setOrders] = useState(null)
     useEffect(() => {
@@ -41,7 +43,7 @@ function ManageOrders() {
         const status = {
             status: "DONE"
         };
-        fetch(`http://localhost:8080/orders/editOrderStatus/${id}`, {
+        fetch(`${apiURL}/orders/editOrderStatus/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`,
@@ -69,6 +71,7 @@ function ManageOrders() {
     }
 
     const selectStatus = (orderStatus) => {
+        console.log(orderStatus)
         switch (orderStatus) {
             case status[0]:
                 return <option key={0} value="0" defaultValue>{status[0]}</option>
@@ -78,13 +81,11 @@ function ManageOrders() {
                 return <option key={2} value="2" defaultValue>{status[2]}</option>
             case status[3]:
                 return <option key={3} value="3" defaultValue>{status[3]}</option>
-            case status[4]:
-                return <option key={4} value="4" defaultValue>{status[4]}</option>
             default:
                 return <option key={null} value="default" defaultValue>Select Status</option>
         }
     }
-    const status = ["PENDING", "DELIVERED", "DONE", "ON DELIVERY", "CANCELED"];
+    const status = ["PENDING", "ON DELIVERY", "DELIVERED", "DONE"];
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -94,66 +95,20 @@ function ManageOrders() {
         return `${day} ${month.charAt(0).toUpperCase() + month.slice(1)} ${year}`;
     };
 
-    const handleStatusUpdate = async (selectedStatusId, id, order) => {
-        const selectedStatus = status[selectedStatusId];
-        const timestamp = new Date().toISOString();
-
-
-        // Create a new status update object
-        const statusUpdate = {
-            status: selectedStatus,
-            timestamp: timestamp
-        };
-        try {
-            // Parse the current status history JSON string from order.status
-            const currentStatusHistory = JSON.parse(order.status).statusHistory;
-
-            // Check if the selected status already exists in statusHistory
-            const statusExists = currentStatusHistory.some(entry => entry.status === selectedStatus);
-
-            if (statusExists) {
-                console.log('Status already exists:', selectedStatus);
-                return; // Exit function if status already exists
-            }
-
-            // Append new status update to current status history
-            const updatedStatusHistory = [...currentStatusHistory, statusUpdate];
-
-            // Prepare updated status JSON
-            const updatedStatusJson = JSON.stringify({statusHistory: updatedStatusHistory});
-
-            // Update order status in backend
-            const response = await fetch(`http://localhost:8080/orders/editOrderStatus/${id}`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${jwt}`,
-                },
-                method: 'PUT',
-                body: updatedStatusJson
-            });
-
-            if (response.ok) {
-                console.log('Status updated successfully:', statusUpdate);
-
-                // Optionally update orders list or other UI components
-            } else {
-                console.error('Failed to update status:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error updating status:', error);
-        }
-    }
-
-    const handleChange = (e, orderId, order) => {
-        const selectedStatusId = parseInt(e.target.value, 10);
-        setCurrentStatusId(selectedStatusId);
-        handleStatusUpdate(selectedStatusId, orderId, order);
+    const getLatestStatus = (orderStatus) => {
+        const statusObject = JSON.parse(orderStatus);
+        const {statusHistory} = statusObject;
+        return statusHistory.sort((a, b) => b.timestamp - a.timestamp)[0];
     };
 
     return (
         <>
             <div>
-                <h3>Orders</h3>
+                <div className="d-flex gap-3 align-items-center mb-3">
+                    <BackButton>
+                    </BackButton>
+                    <h3 className={"mb-0"}>Orders</h3>
+                </div>
                 <ListGroup>
                     {
                         orders ? (
@@ -171,9 +126,7 @@ function ManageOrders() {
                                     Price: {order.price} Ron
                                 </span>
                                     <span>
-                                        {
-                                            selectBadge(order.status)
-                                        }
+                                        <OrderStatusBadge orderStatus={order.status}/>
                                 </span>
                                     <span>
                                         {
@@ -188,30 +141,29 @@ function ManageOrders() {
                                     <span>
                                       Delivery time : {formatDate(order.deliveryTime)}
                                     </span>
-                                    <Form className={"w-25"} key={`form-${order.id}`}>
-                                        <Form.Select
-                                            aria-label="Select Status"
-                                            size="sm"
-                                            name="status"
-                                            key={order.id}
-                                            value={status.indexOf(order.status)}
-                                            onChange={(e) => handleChange(e, order.id, order)}
-                                        >
-                                            {selectStatus(order.status)}
-                                            {status.map((item, index) => (
-                                                order.status !== item ? (
-                                                    <option key={item}
-                                                            value={index}>{item}</option>
-                                                ) : (<></>)
-                                            ))}
-                                        </Form.Select>
-                                    </Form>
+                                    {
+                                        getLatestStatus(order.status).status !== "CANCELED" ? (
+                                            <Form className={"w-25"} key={`form-${order.id}`}>
+                                                {<StatusSelect order={order} status={status}/>}
+                                            </Form>) : (<>
+                                            <Form className={"w-25"} key={`form-${order.id}`}>
+                                                <Form.Select
+                                                    aria-label="Select Status"
+                                                    size="sm"
+                                                    name="status"
+                                                    key={order.id}
+                                                    disabled={true}>
+                                                    <option value="default">Order canceled by client</option>
+                                                </Form.Select>
+                                            </Form>
+                                        </>)
+                                    }
+
                                 </ListGroup.Item>
                             ))
                         ) : (<></>)
 
                     }
-
                 </ListGroup>
             </div>
         </>

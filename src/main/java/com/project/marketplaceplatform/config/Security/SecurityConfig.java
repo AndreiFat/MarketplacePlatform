@@ -45,9 +45,10 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/products/viewProducts").permitAll()
-                                .requestMatchers("products/{productId}").permitAll()
-                                .requestMatchers("products/{productId}/viewReviews").permitAll()
-                                .requestMatchers("categories/categories-with-products").permitAll()
+                                .requestMatchers("/products/{productId}").permitAll()
+                                .requestMatchers("/products/{productId}/viewReviews").permitAll()
+                                .requestMatchers("/categories/categories-with-products").permitAll()
+                                .requestMatchers("products/productsInCategory").permitAll()
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .requestMatchers("/static/**").permitAll()
                                 .anyRequest().authenticated()

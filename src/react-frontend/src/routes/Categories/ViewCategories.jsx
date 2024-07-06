@@ -2,7 +2,8 @@ import {useState} from "react";
 import {useLocalState} from "../../Utilities/useLocalState.js";
 import AdminRoute from "../../Utilities/AdminRoute.jsx";
 import Button from "react-bootstrap/Button";
-import {Form, Modal} from "react-bootstrap";
+import {Card, Col, Form, Modal, Row} from "react-bootstrap";
+import BackButton from "../../components/BackButton.jsx";
 
 function ViewCategories() {
     const apiURL = import.meta.env.VITE_API_URL;
@@ -120,28 +121,38 @@ function ViewCategories() {
     return (
         <>
 
-            <div className="flex">
-                <h5></h5>
+            <div className="d-flex align-items-center justify-content-between">
+                <div className="d-flex align-items-center gap-3">
+                    <BackButton></BackButton>
+                    <h3 className={"mb-0"}>Categories</h3>
+                </div>
                 <Button variant="dark" className={"mb-3 rounded-4 px-4 py-3"} onClick={handleShow}>
                     Add new category
                 </Button>
             </div>
-            {
-                categories ? (
-                        categories.map((category) => (
-                            <div key={category.id} className={"mb-3"}>
-                                <span className={"me-3"}>Name: {category.name} </span>
-                                <Button variant="warning" data-id={category.id}
-                                        onClick={() => handleShowForEdit(category.id, category.name)}
-                                        className={"me-3"}>Edit</Button>
-                                <Button variant="danger" data-id={category.id}
-                                        onClick={() => deleteCategory(category.id)}>Delete</Button>
-                            </div>
-
-                        )))
-                    : (<></>)
-            }
-
+            <Row>
+                {
+                    categories ? (
+                            categories.map((category) => (
+                                <Col key={category.id} md={3}>
+                                    <Card className={"mb-3 rounded-4 border-0 shadow-sm"}>
+                                        <Card.Body>
+                                            <h4 className={"me-3 mb-3"}>{category.name} </h4>
+                                            <div className="d-flex align-items-center justify-content-between gap-3">
+                                                <Button variant="warning" data-id={category.id}
+                                                        onClick={() => handleShowForEdit(category.id, category.name)}
+                                                        className={"w-100 rounded-4 px-4 py-3"}>Edit</Button>
+                                                <Button variant="danger" data-id={category.id}
+                                                        className={"w-100 rounded-4 px-4 py-3"}
+                                                        onClick={() => deleteCategory(category.id)}>Delete</Button>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            )))
+                        : (<></>)
+                }
+            </Row>
             {
                 categories ? (
                         categories.map((category) => (

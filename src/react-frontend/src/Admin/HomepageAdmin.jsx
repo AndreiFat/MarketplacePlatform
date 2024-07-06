@@ -86,7 +86,7 @@ function HomepageAdmin() {
                             <span className={"me-3"}>
                                 <Button variant={"dark"} className={"rounded-4 px-4 py-3"}><Link
                                     className={"text-decoration-none text-white"}
-                                    to={"/addingProducts"}>Add Products</Link></Button>
+                                    to={"/admin/addingProducts"}>Add Products</Link></Button>
                             </span>
                             <span className={"me-3"}>
                             <Button variant={"dark"} className={"rounded-4 px-4 py-3"}><Link

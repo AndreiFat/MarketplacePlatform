@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {useLocalState} from "../../Utilities/useLocalState.js";
@@ -125,6 +125,10 @@ function EditProductPage() {
     }
 
 
+    const handleBack = () => {
+        navigate(-1); // Navigate back in the history
+    };
+
     return (
         <>
             <Row className={"justify-content-center pt-3"}>
@@ -209,8 +213,8 @@ function EditProductPage() {
                             </Form.Group>
 
                             <Form.Group>
-                                <Button variant="danger" className={"me-3 px-4 py-3 rounded-4"}>
-                                    <Link className={"text-decoration-none text-white"} to={'/'}>Cancel</Link>
+                                <Button variant="danger" onClick={handleBack} className={"me-3 px-4 py-3 rounded-4"}>
+                                    Cancel
                                 </Button>
                                 <Button className={"rounded-4 px-4 py-3"} variant="dark" type="submit"
                                         onClick={handleSubmit}>

@@ -3,6 +3,7 @@ import {useState} from "react";
 import {useLocalState} from "../../Utilities/useLocalState.js";
 import Button from "react-bootstrap/Button";
 import {Card, Col, Form, Modal, Row} from "react-bootstrap";
+import BackButton from "../../components/BackButton.jsx";
 
 function ViewDiscountCoupons() {
     const apiURL = import.meta.env.VITE_API_URL;
@@ -171,34 +172,39 @@ function ViewDiscountCoupons() {
 
     return (
         <>
-            <Row className={"py-3"}>
-                <Col md={"6"}>
-                    <h3>Discount Coupons</h3>
-                </Col>
-                <Col className={"d-flex justify-content-end"} md={"6"}>
-                    <Button variant="primary" onClick={handleShow}>
-                        Add new coupon
-                    </Button>
-                </Col>
-            </Row>
+            <div className="d-flex justify-content-between align-items-center pt-3">
+                <div className={"d-flex align-items-center gap-3"}>
+                    <BackButton></BackButton>
+                    <h3 className={"mb-0"}>Discount Coupons</h3>
+                </div>
+                <Button variant="dark" className={"px-4 py-3 rounded-4"} onClick={handleShow}>
+                    Add new coupon
+                </Button>
+            </div>
             <Row className={"mt-3"}>
                 {
                     (discountCoupons && discountCoupons.length !== 0) ? (
                             discountCoupons.map((discountCoupon) => (
                                 <Col md={3} key={discountCoupon.id}>
-                                    <Card className={" rounded-4"}>
+                                    <Card className={"rounded-4 border-0 shadow-sm"}>
                                         <Card.Body className={"p-4"}>
                                             <div className="mb-3">
-                                                <span><h2>{discountCoupon.code}</h2></span>
-                                                <span><h5>Value: {discountCoupon.discount}</h5></span>
-                                                <span><h5>Category: {discountCoupon.categoryId.name}</h5></span>
+                                                <h3>{discountCoupon.code}</h3>
+                                                <h5>Value: <span className={"fw-normal"}>{discountCoupon.discount}</span>
+                                                </h5>
+                                                <h5>Category: <span
+                                                    className={"fw-normal"}>{discountCoupon.categoryId.name}</span></h5>
                                             </div>
-                                            <Button className={"me-3"} variant="warning" data-id={discountCoupon.id}
-                                                    onClick={() => handleShowForEdit(discountCoupon.id, discountCoupon.code, discountCoupon.discount, discountCoupon.categoryId.id)}>Edit
-                                            </Button>
-                                            <Button variant="danger" data-id={discountCoupon.id}
-                                                    onClick={() => deleteDiscountCoupon(discountCoupon.id)}>Delete
-                                            </Button>
+                                            <div className="d-flex justify-content-between align-items-center gap-3">
+                                                <Button variant="warning" className={"px-4 py-3 rounded-4 w-100"}
+                                                        data-id={discountCoupon.id}
+                                                        onClick={() => handleShowForEdit(discountCoupon.id, discountCoupon.code, discountCoupon.discount, discountCoupon.categoryId.id)}>Edit
+                                                </Button>
+                                                <Button variant="danger" className={"px-4 py-3 rounded-4 w-100"}
+                                                        data-id={discountCoupon.id}
+                                                        onClick={() => deleteDiscountCoupon(discountCoupon.id)}>Delete
+                                                </Button>
+                                            </div>
                                         </Card.Body>
                                     </Card>
                                 </Col>

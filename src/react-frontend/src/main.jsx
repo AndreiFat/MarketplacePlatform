@@ -21,7 +21,6 @@ import HomepageAdmin from "./Admin/HomepageAdmin.jsx";
 import ManageUsers from "./routes/User/ManageUsers.jsx";
 import ManageOrders from "./Orders/ManageOrders.jsx";
 import Orders from "./routes/User/Orders.jsx";
-import AdminLayout from "./Layouts/AdminLayout.jsx";
 import SearchProducts from "./routes/Products/SearchProducts.jsx";
 import {Elements} from "@stripe/react-stripe-js";
 import {loadStripe} from "@stripe/stripe-js";
@@ -109,7 +108,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/",
-        element: <AdminLayout/>,
+        element: <GeneralLayout/>,
         children: [
             {
                 path: "/admin",
@@ -136,7 +135,7 @@ const router = createBrowserRouter([
                 element: <ViewDiscountCoupons/>
             },
             {
-                path: "/addingProducts",
+                path: "/admin/addingProducts",
                 element: <AddProductPage/>
             }
         ]

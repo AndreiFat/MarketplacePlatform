@@ -8,6 +8,7 @@ import truncateWords from "../../Utilities/truncateWords.js";
 import OrderStatus from "../../components/OrderStatus.jsx";
 import OrderStatusBadge from "../../components/OrderStatusBadge.jsx";
 import CopyToClipboardButton from "../../components/CopyToClipboardButton.jsx";
+import BackButton from "../../components/BackButton.jsx";
 
 function Orders() {
     const apiURL = import.meta.env.VITE_API_URL;
@@ -90,6 +91,59 @@ function Orders() {
         setOrder(order)
     };
 
+    const handleStatusUpdate = async (newStatus, id, order) => {
+        const timestamp = new Date().toISOString();
+
+        // Create a new status update object
+        const statusUpdate = {
+            status: newStatus,
+            timestamp: timestamp
+        };
+        try {
+            // Parse the current status history JSON string from order.status
+            const currentStatusHistory = JSON.parse(order.status).statusHistory;
+
+            // Check if the new status already exists in statusHistory
+            const statusExists = currentStatusHistory.some(entry => entry.status === newStatus);
+
+            if (statusExists) {
+                console.log('Status already exists:', newStatus);
+                return; // Exit function if status already exists
+            }
+
+            // Append new status update to current status history
+            const updatedStatusHistory = [...currentStatusHistory, statusUpdate];
+
+            // Prepare updated status JSON
+            const updatedStatusJson = JSON.stringify({statusHistory: updatedStatusHistory});
+
+            // Update order status in backend
+            const response = await fetch(`${apiURL}/orders/editOrderStatus/${id}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${jwt}`,
+                },
+                method: 'PUT',
+                body: updatedStatusJson
+            });
+
+            if (response.ok) {
+                console.log('Status updated successfully:', statusUpdate);
+
+                // Optionally update orders list or other UI components
+            } else {
+                console.error('Failed to update status:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error updating status:', error);
+        }
+    };
+
+    const handleCancelOrder = (orderId, order) => {
+        handleStatusUpdate("CANCELED", orderId, order);
+        window.location.reload();
+    };
+
     useEffect(() => {
         if (!loading && products !== null) {
             console.log("downloading")
@@ -128,7 +182,7 @@ function Orders() {
 
             // Add table headers
             doc.setFont('Helvetica', 'bold');
-            doc.setFillColor(100, 100, 100);
+            doc.setFillColor(35, 77, 0);
             doc.setTextColor(255, 255, 255);
             doc.rect(15, 90, 180, 10, 'F');
 
@@ -154,7 +208,7 @@ function Orders() {
             // Calculate and add total
 
             doc.setFont('Helvetica', 'bold');
-            doc.text(`Total: RON ${total.toFixed(2)}`, 150, 127);
+            doc.text(`Total: RON ${total.toFixed(2)}`, 150, yPrice + 50);
 
             // Save the PDF as a blob
             const pdfBlob = doc.output('blob');
@@ -225,10 +279,20 @@ function Orders() {
             });
     }
 
+    const getLatestStatus = (orderStatus) => {
+        const statusObject = JSON.parse(orderStatus);
+        const {statusHistory} = statusObject;
+        return statusHistory.sort((a, b) => b.timestamp - a.timestamp)[0];
+    };
+
     return (
         <>
             <div className={"pt-3"}>
-                <h3 className={"mb-3"}>Orders</h3>
+                <div className="d-flex gap-3 align-items-center mb-3">
+                    <BackButton>
+                    </BackButton>
+                    <h3 className={"mb-0"}>Orders</h3>
+                </div>
                 <Accordion defaultActiveKey="0">
                     {
                         orders ? (
@@ -303,42 +367,68 @@ function Orders() {
                                                                 <p className="fw-normal">Address</p>
                                                                 <p className="fw-light text-muted">{order.addressId.address}, {order.addressId.region}</p>
                                                             </div>
-                                                            <div className="d-flex justify-content-between">
+                                                            <div
+                                                                className="d-flex justify-content-between align-items-center">
                                                                 <p className="fw-normal">Status</p>
-                                                                <p className="fw-light text-muted"><OrderStatusBadge
-                                                                    orderStatus={order.status}/></p>
+                                                                <p className="fw-light text-muted ">
+                                                                    <OrderStatusBadge
+                                                                        orderStatus={order.status}/></p>
                                                             </div>
                                                             <div
-                                                                className="d-flex justify-content-between p-3 bg-green rounded-3">
-                                                                <h4 className="fw-normal mb-0">Total</h4>
-                                                                <div
-                                                                    className="d-flex justify-content-end align-items-end gap-2">
-                                                                    <h4 className="fw-normal mb-0">{order.price} RON </h4>
-                                                                    <p className="fw-light text-muted mb-0">({order.quantity} Items)</p>
-                                                                </div>
+                                                                className="d-flex justify-content-between align-items-center">
+                                                                {
+                                                                    getLatestStatus(order.status).status === "DONE" ? (
+                                                                        <>
+                                                                            <h6 className={"mb-0"}>Download Invoice</h6>
+                                                                            <Button
+                                                                                className={"btn btn-dark px-3 px-3 py-2 fs-7 rounded-4"}
+                                                                                onClick={() => downloadPDF(order)}>Download</Button>
+                                                                        </>
+                                                                    ) : (<></>)
+                                                                }
+                                                            </div>
+                                                            <div
+                                                                className="d-flex justify-content-between align-items-center">
+                                                                {
+                                                                    getLatestStatus(order.status).status !== "DONE" && getLatestStatus(order.status).status !== "DELIVERED" && getLatestStatus(order.status).status !== "CANCELED" ? (
+                                                                        <>
+                                                                            <p className={"fw-normal mb-0"}>Cancel
+                                                                                Order</p>
+                                                                            <Button
+                                                                                className={"btn btn-danger fs-7 py-2 px-3 py-1 rounded-4"}
+                                                                                onClick={() => handleCancelOrder(order.id, order)}>Cancel</Button>
+                                                                        </>
+                                                                    ) : (<></>)
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            className="d-flex justify-content-between p-3 bg-green rounded-3">
+                                                            <h4 className="fw-normal mb-0">Total</h4>
+                                                            <div
+                                                                className="d-flex justify-content-end align-items-end gap-2">
+                                                                <h4 className="fw-normal mb-0">{order.price} RON </h4>
+                                                                <p className="fw-light text-muted mb-0">({order.quantity} Items)</p>
                                                             </div>
                                                         </div>
                                                     </Col>
-                                                    <Col md={2}>
-                                                        <h5>
-                                                            Timeline
-                                                        </h5>
-                                                        <div className="px-2 py-3">
-                                                            <OrderStatus orderStatus={order.status}/>
-
-                                                        </div>
-                                                    </Col>
+                                                    {
+                                                        getLatestStatus(order.status).status !== "CANCELED" ? (
+                                                            <Col md={2}>
+                                                                <h5>
+                                                                    Timeline
+                                                                </h5>
+                                                                <div className="px-2 py-3">
+                                                                    <OrderStatus orderStatus={order.status}/>
+                                                                </div>
+                                                            </Col>
+                                                        ) : (<></>)
+                                                    }
                                                 </Row>
                                             </>)}
                                         </div>
 
-                                        {
-                                            order.status === "DONE" ? (
-                                                <span className={"me-5"}>
-                                                <Button onClick={() => downloadPDF(order)}>Download Invoice</Button>
-                                            </span>
-                                            ) : (<></>)
-                                        }
+
                                     </Accordion.Body>
                                 </Accordion.Item>
                             ))

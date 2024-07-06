@@ -8,16 +8,26 @@ import {faCircleUser, faHeart, faMagnifyingGlass} from "@fortawesome/free-solid-
 import Cookies from "js-cookie";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import RouteVerifier from "./RouteVerifier.jsx";
 
 function Header() {
+
+    const apiURL = import.meta.env.VITE_API_URL;
     const [loggedIn, setLoggedIn] = useState(false);
     const [jwt, setJwt] = useLocalState("", "jwt");
 
     const [query, setQuery] = useState('');
     const navigate = useNavigate();
+    let userEmail = ""
+    let userRole = ""
 
-    const decodedToken = jwtDecode(jwt);
-    const userEmail = decodedToken.sub;
+    if (jwt) {
+        const decodedToken = jwtDecode(jwt);
+        userEmail = decodedToken.sub;
+        userRole = decodedToken.authorities;
+    }
+
+    const isAdmin = userRole.includes('ROLE_ADMIN');
 
     function handleSearch(e) {
         e.preventDefault();
@@ -39,7 +49,7 @@ function Header() {
             email: userEmail
         };
 
-        fetch('http://localhost:8080/users/viewUser', {
+        fetch(`${apiURL}/users/viewUser`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`
@@ -75,17 +85,21 @@ function Header() {
         }
     }, []);
 
+
     return (
         <>
             <Navbar expand="lg" className="shadow-sm bg-white mb-4" fixed={"top"}>
                 <Container>
-                    <Navbar.Brand href="/">
+                    <Navbar.Brand href="/" className={"d-flex align-items-center gap-3"}>
                         <img
                             src="/src/assets/Logo.png"
                             className="d-inline-block align-top me-1"
                             alt="React Bootstrap logo"
                             height={"54px"}
                         />
+                        <RouteVerifier path={"/admin"} pathName={location.pathname}>
+                            {isAdmin ? <h5 className={"mb-0"}>Admin Panel</h5> : <></>}
+                        </RouteVerifier>
                     </Navbar.Brand>
                     <Form className="d-flex w-25" onSubmit={event => handleSearch(event)}>
                         <FormControl

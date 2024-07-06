@@ -150,7 +150,7 @@ button:focus:not(:focus-visible) {
 }
 
 .fs-7 {
-    font-size: 13px;
+    font-size: 13px !important;
 }
 
 .border-done {

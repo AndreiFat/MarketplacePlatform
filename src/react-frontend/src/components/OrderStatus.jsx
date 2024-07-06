@@ -4,11 +4,7 @@ import {VerticalTimeline, VerticalTimelineElement} from "react-vertical-timeline
 
 const OrderStatus = ({orderStatus}) => {
     // Parse the JSON string from status
-    console.log("status!!!!")
-    console.log(orderStatus)
     const statusObject = JSON.parse(orderStatus);
-    console.log("OBJECT !!!!")
-    console.log(statusObject)
     const status = ["PENDING", "DELIVERED", "DONE", "ON DELIVERY"];
     const canceled = "CANCELED";
 
